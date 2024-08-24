@@ -16,13 +16,16 @@ var content embed.FS // object representing the embedded directory
 
 var log *slog.Logger
 
-func main() {
+func init() {
 	// setup logger
 	opts := slog.HandlerOptions{
 		Level: slog.LevelDebug,
 	}
 	handler := slog.NewTextHandler(os.Stderr, &opts)
 	log = slog.New(handler)
+}
+
+func main() {
 
 	// read embed dir
 	fs, err := content.ReadDir(embedDir)
