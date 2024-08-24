@@ -14,13 +14,15 @@ const embedDir = "temp"
 //go:embed temp
 var content embed.FS // object representing the embedded directory
 
+var log *slog.Logger
+
 func main() {
 	// setup logger
 	opts := slog.HandlerOptions{
 		Level: slog.LevelDebug,
 	}
 	handler := slog.NewJSONHandler(os.Stderr, &opts)
-	log := slog.New(handler)
+	log = slog.New(handler)
 
 	// read embed dir
 	fs, err := content.ReadDir(embedDir)
@@ -67,5 +69,12 @@ func main() {
 }
 
 func serveRoot(w http.ResponseWriter, r *http.Request) {
+	log.Debug("serving response",
+		"request", r.URL.Path,
+		"method", r.Method,
+		"remote", r.RemoteAddr,
+	)
+
+	// respond with "Hello, World!"
 	fmt.Fprintf(w, "Hello, World!")
 }
