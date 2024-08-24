@@ -21,7 +21,7 @@ func main() {
 	opts := slog.HandlerOptions{
 		Level: slog.LevelDebug,
 	}
-	handler := slog.NewJSONHandler(os.Stderr, &opts)
+	handler := slog.NewTextHandler(os.Stderr, &opts)
 	log = slog.New(handler)
 
 	// read embed dir
