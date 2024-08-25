@@ -6,7 +6,6 @@ import (
 	"log/slog"
 	"net/http"
 	"os"
-	"path"
 	"text/template"
 )
 
@@ -60,8 +59,6 @@ func main() {
 	http.Handle("/static/",
 		http.FileServer(http.FS(content)),
 	)
-	// templates test
-	http.HandleFunc("/templates", logMiddleware(serveTemplates))
 
 	// start server
 	port := 8008
@@ -93,12 +90,14 @@ func logMiddleware(next http.HandlerFunc) http.HandlerFunc {
 	}
 }
 
-func serveTemplates(w http.ResponseWriter, _ *http.Request) {
+// serveRoot is the base handler for the root (bare) path ("/")
+func serveRoot(w http.ResponseWriter, r *http.Request) {
 	tmpl, err := template.ParseFS(content,
-		"static/templates/index.html",
-		"static/templates/header.html",
+		"static/html/index.html",
+		"static/html/head.html",
+		"static/html/footer.html",
 	)
-	log.Info("templates paresed")
+	log.Debug("templates paresed")
 	if err != nil {
 		log.Error("failed to parse template",
 			"error", err,
@@ -112,7 +111,9 @@ func serveTemplates(w http.ResponseWriter, _ *http.Request) {
 		Name:  "Nailivic Studios!!",
 		Title: "-nailivic-",
 	}
-	log.Info("data parsed", "data", data)
+	log.Debug("data parsed", "data", data)
+	w.Header().Set("Special-Status", "super special")
+
 	err = tmpl.Execute(w, data)
 	if err != nil {
 		log.Error("failed to execute template",
@@ -120,37 +121,4 @@ func serveTemplates(w http.ResponseWriter, _ *http.Request) {
 		)
 		http.Error(w, "failed to execute template", http.StatusInternalServerError)
 	}
-}
-
-// serveRoot is the base handler for the root (bare) path ("/")
-func serveRoot(w http.ResponseWriter, r *http.Request) {
-	log.Debug("serving response",
-		"request", r.URL.Path,
-		"method", r.Method,
-		"remote", r.RemoteAddr,
-	)
-
-	// get /static/html/index.html
-	fileName := "index.html"
-	path := path.Join("static", "html", fileName)
-	file, err := content.ReadFile(path)
-	if err != nil {
-		log.Error("failed to read file",
-			"error", err,
-			"file", path,
-		)
-		msg := fmt.Sprintf("failed to read file %s", fileName)
-		http.Error(w, msg, http.StatusInternalServerError)
-	}
-	w.Header().Set("Special-Status", "super special")
-
-	size, err := w.Write(file)
-	if err != nil {
-		log.Error("failed to write response",
-			"error", err,
-			"file", path,
-			"bytes", size,
-		)
-	}
-	log.Warn("response written", "bytes", size)
 }
