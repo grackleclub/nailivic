@@ -60,7 +60,16 @@ func main() {
 		"port", port,
 	)
 	fmt.Println("Server is running on port", port)
+
+	// routes
 	http.HandleFunc("/", serveRoot)
+	http.Handle("/static/",
+		http.StripPrefix("/static/",
+			http.FileServer(http.FS(content)),
+		),
+	)
+
+	// start server
 	err = http.ListenAndServe(fmt.Sprintf(":%d", port), nil)
 	if err != nil {
 		slog.Error("failed to start server",
