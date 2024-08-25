@@ -90,6 +90,24 @@ func logMiddleware(next http.HandlerFunc) http.HandlerFunc {
 	}
 }
 
+// page represents a page in the website,
+// and template file order matters,
+// hence the heirarchy and slices
+type page struct {
+	Route            string   // (e.g. "/", "/login")
+	TemplateParent   string   // (e.g. "index.html")
+	TemplateChildren []string // (e.g. ["head.html", "footer.html"])
+
+	// TemplateGrandChildren []string // (e.g. ["head.style.html"])
+}
+
+var pages = map[string]string{}
+var pieces = []string{
+	"static/html/index.html",
+	"static/html/head.html",
+	"static/html/footer.html",
+}
+
 // serveRoot is the base handler for the root (bare) path ("/")
 func serveRoot(w http.ResponseWriter, r *http.Request) {
 	tmpl, err := template.ParseFS(content,
@@ -97,28 +115,27 @@ func serveRoot(w http.ResponseWriter, r *http.Request) {
 		"static/html/head.html",
 		"static/html/footer.html",
 	)
-	log.Debug("templates paresed")
 	if err != nil {
 		log.Error("failed to parse template",
 			"error", err,
 		)
-		http.Error(w, "failed to parse template", http.StatusInternalServerError)
+		http.Error(w, "parse error", http.StatusInternalServerError)
 	}
 	data := struct {
 		Name  string
 		Title string
 	}{
 		Name:  "Nailivic Studios!!",
-		Title: "-nailivic-",
+		Title: "nailivic",
 	}
-	log.Debug("data parsed", "data", data)
-	w.Header().Set("Special-Status", "super special")
+	log.Debug("templates and data parsed", "data", data)
+	w.Header().Set("X-Custom-Header", "special :)")
 
 	err = tmpl.Execute(w, data)
 	if err != nil {
 		log.Error("failed to execute template",
 			"error", err,
 		)
-		http.Error(w, "failed to execute template", http.StatusInternalServerError)
+		http.Error(w, "serve error", http.StatusInternalServerError)
 	}
 }
