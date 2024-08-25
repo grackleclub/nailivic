@@ -1,0 +1,77 @@
+:root {
+    --ff-serif: 'Playfair', serif;
+    --ff-sans: 'Big Shoulders Text', sans-serif;
+    --ff-display: 'Big Shoulders Inline Display', sans-serif;
+
+    /* small screen font-sizes */
+    --fs-100: 0.75rem;
+    --fs-200: 1rem;
+    --fs-300: 1.25rem;
+    --fs-400: 1.375rem;
+    --fs-500: 1.75rem;
+    --fs-600: 2rem;
+    --fs-700: 2.125rem;
+    --fs-900: 7rem;
+
+    --fw-200: 200;
+    --fw-300: 300;
+    --fw-400: 400;
+    --fw-700: 700;
+    --fw-900: 900;
+
+    --clr-neutral-100: #e6e3f6;
+    --clr-neutral-200: #a9585f;
+    --clr-neutral-300: #4b7ea9;
+    --clr-neutral-400: ;
+    --clr-neutral-500: ;
+    --clr-neutral-900: ;
+  
+    --clr-primary-300: #200820;
+    --clr-primary-400: ;
+  
+    --br: 1rem;
+    --spacer: 1rem;
+}
+  
+@media (min-width: 40em) {
+:root {
+    --fs-200: 1rem;
+    --fs-300: 1.375rem;
+    --fs-400: 1.75rem;
+    --fs-500: 2.125rem;
+    --fs-600: 2.75rem;
+    --fs-700: 4.25rem;
+    --fs-900: 8rem;
+}
+}
+
+/* reset */
+*, *::before, *::after {
+    box-sizing: border-box;
+}
+
+* {
+    margin: 0;
+}
+
+body {
+    line-height: 1;
+    -webkit-font-smoothing: antialiased;
+}
+
+ul,
+ol,
+ul[class], 
+ol[class] {
+    list-style: none;
+    padding: 0;
+}
+
+/* custom styles */
+
+body {
+    font-family: var(--ff-sans);
+    font-size: var(--fs-200);
+    color: var(--clr-neutral-100);
+    background-color: var(--clr-neutral-300);
+}
