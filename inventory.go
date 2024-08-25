@@ -17,9 +17,9 @@ type color struct {
 	value string
 }
 
-const red color = "red"
-const black color = "black"
-const green color = "green"
+// const red color = "red"
+// const black color = "black"
+// const green color = "green"
 
 type size string
 
@@ -50,7 +50,7 @@ type Part struct {
 	Size     size
 }
 
-func newPart(name string, color color) Part {
+func newPart(name name, color color) Part {
 	return Part{
 		ItemName: name,
 		Color:    color,
