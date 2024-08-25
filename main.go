@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"log/slog"
 	"net/http"
-	"os"
 	"text/template"
 )
 
@@ -19,14 +18,18 @@ var log *slog.Logger
 func init() {
 	// setup logger
 	opts := slog.HandlerOptions{
-		Level: slog.LevelDebug,
+		Level:     slog.LevelDebug,
+		AddSource: true,
 	}
-	handler := slog.NewTextHandler(os.Stderr, &opts)
-	log = slog.New(handler)
+	var err error
+	log, err = newLog(opts)
+	log = log.With("service", "nailivic")
+	if err != nil {
+		panic(err)
+	}
 }
 
 func main() {
-
 	// read embed dir
 	_, err := content.ReadDir(embedDir)
 	if err != nil {
@@ -36,26 +39,8 @@ func main() {
 		panic(err)
 	}
 
-	// log found files in embed dir
-	// for _, f := range fs {
-	// 	// read that file
-	// 	path := path.Join(embedDir, f.Name())
-	// 	fileContents, err := content.ReadFile(path)
-	// 	if err != nil {
-	// 		log.Error("failed to read file",
-	// 			"error", err,
-	// 			"file", f.Name(),
-	// 		)
-	// 		continue
-	// 	}
-	// 	log.Debug("file found",
-	// 		"file", f.Name(),
-	// 		"contents", string(fileContents),
-	// 	)
-	// }
-
 	// routes
-	http.HandleFunc("/", logMiddleware(serveRoot))
+	http.HandleFunc("/", logMdl(serveRoot))
 	http.Handle("/static/",
 		http.FileServer(http.FS(content)),
 	)
@@ -76,7 +61,8 @@ func main() {
 	log.Info("server stopped", "port", port)
 }
 
-func logMiddleware(next http.HandlerFunc) http.HandlerFunc {
+// log is a middleware that logs all incoming requests
+func logMdl(next http.HandlerFunc) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		log.Debug("request received",
 			"method", r.Method,
@@ -85,31 +71,15 @@ func logMiddleware(next http.HandlerFunc) http.HandlerFunc {
 			"refer", r.Referer(),
 			"user-agent", r.UserAgent(),
 			"opaque", r.URL.Opaque,
+			"bytes", r.ContentLength,
 		)
 		next(w, r)
 	}
 }
 
-// page represents a page in the website,
-// and template file order matters,
-// hence the heirarchy and slices
-type page struct {
-	Route            string   // (e.g. "/", "/login")
-	TemplateParent   string   // (e.g. "index.html")
-	TemplateChildren []string // (e.g. ["head.html", "footer.html"])
-
-	// TemplateGrandChildren []string // (e.g. ["head.style.html"])
-}
-
-var pages = map[string]string{}
-var pieces = []string{
-	"static/html/index.html",
-	"static/html/head.html",
-	"static/html/footer.html",
-}
-
 // serveRoot is the base handler for the root (bare) path ("/")
 func serveRoot(w http.ResponseWriter, r *http.Request) {
+	// order matters (parent -> child)
 	tmpl, err := template.ParseFS(content,
 		"static/html/index.html",
 		"static/html/head.html",
@@ -121,12 +91,15 @@ func serveRoot(w http.ResponseWriter, r *http.Request) {
 		)
 		http.Error(w, "parse error", http.StatusInternalServerError)
 	}
+	// TODO should this be structured and abstracted differently?
 	data := struct {
-		Name  string
-		Title string
+		Name       string
+		Title      string
+		Stylesheet string
 	}{
-		Name:  "Nailivic Studios!!",
-		Title: "nailivic",
+		Name:       "Nailivic Studios!!",
+		Title:      "nailivic",
+		Stylesheet: "static/css/style.css",
 	}
 	log.Debug("templates and data parsed", "data", data)
 	w.Header().Set("X-Custom-Header", "special :)")
@@ -137,5 +110,6 @@ func serveRoot(w http.ResponseWriter, r *http.Request) {
 			"error", err,
 		)
 		http.Error(w, "serve error", http.StatusInternalServerError)
+		return
 	}
 }
