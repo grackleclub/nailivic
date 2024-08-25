@@ -1,0 +1,4 @@
+CREATE TABLE foo (
+  id INT PRIMARY KEY,
+  name VARCHAR(255)
+);
