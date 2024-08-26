@@ -106,6 +106,7 @@ var pieces = []string{
 	"static/html/index.html",
 	"static/html/head.html",
 	"static/html/footer.html",
+	"static/html/login.html",
 }
 
 // serveRoot is the base handler for the root (bare) path ("/")
@@ -114,6 +115,7 @@ func serveRoot(w http.ResponseWriter, r *http.Request) {
 		"static/html/index.html",
 		"static/html/head.html",
 		"static/html/footer.html",
+		"static/html/login.html",
 	)
 	if err != nil {
 		log.Error("failed to parse template",
