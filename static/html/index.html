@@ -1,14 +1,17 @@
 <!DOCTYPE html>
 <html lang="en">
-<html>
   {{ template "head" . }}
   <body>
-    <h1>Hello, {{ .Name }}</h1>
-    <button hx-on:click="alert('Hello, Nailivic!')">
-      click here!
-    </button>
+    <div>
+      <h1>Hello, {{ .Name }}</h1>
+      <button>
+        click here!
+      </button>
+    </div>
     {{ template "login" . }}
-    <img class="svg" src="/static/img/wind-turbine.svg" alt="wind-turbine"/>
+    <div id="svg-1">
+      <img src="/static/img/heart.svg" alt="wind-turbine"/>
+    </div>
     {{ template "footer" . }}
   </body>
 </html>
