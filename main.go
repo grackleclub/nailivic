@@ -11,35 +11,12 @@ import (
 
 const embedDir = "static"
 
+// object representing the embedded directory
+//
 //go:embed static
-var content embed.FS // object representing the embedded directory
+var content embed.FS
 
 var log *slog.Logger
-
-// example of composite types a template might receive page
-// and parse page.nav.bar, page.head, page.footer, etc
-type page struct {
-	nav    navbar
-	head   head
-	footer footer
-}
-type navbar struct{}
-type head struct{}
-type footer struct{}
-
-func newPage() (page, error) {
-	// return page{
-	// 	nav:    navbar{},
-	// 	head:   head{
-	// 		Title: "nailivic",
-
-	// 	},
-	// 	footer: footer{
-	// 		Year: 2021,
-	// 	},
-	// }, nil
-	return page{}, fmt.Errorf("not implemented")
-}
 
 func init() {
 	// setup logger
@@ -69,6 +46,7 @@ func main() {
 	// full pages
 	http.HandleFunc("/", logMW(serveRoot))
 	http.HandleFunc("/login", logMW(serveLogin))
+	http.HandleFunc("/inventory/{produc}", logMW(serveInventory))
 	// http.HandleFunc("/about", logMW(serveAbout)) // TODO (maybe?)
 	// htmx components
 	http.HandleFunc("/htmx/{component}", logMW(serveHtmx))
@@ -109,64 +87,6 @@ func logMW(next http.HandlerFunc) http.HandlerFunc {
 	}
 }
 
-type index struct {
-	Name       string
-	Title      string
-	Stylesheet string
-}
-
-func serveLogin(w http.ResponseWriter, r *http.Request) {
-	http.Error(w, "not implemented", http.StatusTeapot)
-}
-
-// serveRoot is the base handler for the root (bare) path ("/")
-func serveRoot(w http.ResponseWriter, r *http.Request) {
-	// order matters (parent -> child)
-	templates := []string{
-		"static/html/index.html",
-		"static/html/head.html",
-		"static/html/footer.html",
-	}
-	data := index{
-		Name:       "Nailivic Studios!!",
-		Title:      "nailivic",
-		Stylesheet: "static/css/style.css",
-	}
-	w.Header().Set("X-Custom-Header", "special :)")
-	err := writeTemplate(w, templates, data)
-	if err != nil {
-		log.Error("failed to write template",
-			"error", err,
-			"templates", templates,
-		)
-	}
-	log.Debug("root served", "templates", templates)
-}
-
-// serveHtmx dynamically serves htmx components based on the path
-func serveHtmx(w http.ResponseWriter, r *http.Request) {
-	// get the component name from the path
-	componentName := r.PathValue("component")
-	log.Info("htmx component requested", "name", componentName)
-
-	// serve the appropriate htmx component based on name from path
-	var err error
-	w.Header().Set("X-htmx-component-name", componentName)
-	switch componentName {
-	case "special":
-		err = writeTemplate(w, []string{"static/html/special.html"}, nil)
-	default:
-		http.Error(w, "missing or invalid htmx component name", http.StatusBadRequest)
-	}
-	log.Warn("wha happen")
-	if err != nil {
-		log.Error("failed to write htmx component",
-			"error", err,
-			"component", componentName,
-		)
-	}
-}
-
 func writeTemplate(w http.ResponseWriter, templatePaths []string, data interface{}) error {
 	tmpl, err := template.ParseFS(content, templatePaths...)
 	if err != nil {
@@ -192,4 +112,28 @@ func writeTemplate(w http.ResponseWriter, templatePaths []string, data interface
 		"bytes_written", b,
 	)
 	return nil
+}
+
+// serveHtmx dynamically serves htmx components based on the path
+func serveHtmx(w http.ResponseWriter, r *http.Request) {
+	// get the component name from the path
+	componentName := r.PathValue("component")
+	log.Info("htmx component requested", "name", componentName)
+
+	// serve the appropriate htmx component based on name from path
+	var err error
+	w.Header().Set("X-htmx-component-name", componentName)
+	switch componentName {
+	case "special":
+		err = writeTemplate(w, []string{"static/html/special.html"}, nil)
+	default:
+		http.Error(w, "missing or invalid htmx component name", http.StatusBadRequest)
+	}
+	log.Warn("wha happen")
+	if err != nil {
+		log.Error("failed to write htmx component",
+			"error", err,
+			"component", componentName,
+		)
+	}
 }
