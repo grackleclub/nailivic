@@ -68,7 +68,7 @@ func main() {
 	// ROUTES
 	// full pages
 	http.HandleFunc("/", logMW(serveRoot))
-	// http.HandleFunc("/login", logMW(serveLogin)) // TODO (maybe?)
+	http.HandleFunc("/login", logMW(serveLogin))
 	// http.HandleFunc("/about", logMW(serveAbout)) // TODO (maybe?)
 	// htmx components
 	http.HandleFunc("/htmx/{component}", logMW(serveHtmx))
@@ -113,6 +113,10 @@ type index struct {
 	Name       string
 	Title      string
 	Stylesheet string
+}
+
+func serveLogin(w http.ResponseWriter, r *http.Request) {
+	http.Error(w, "not implemented", http.StatusTeapot)
 }
 
 // serveRoot is the base handler for the root (bare) path ("/")
