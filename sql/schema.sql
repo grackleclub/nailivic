@@ -11,14 +11,14 @@ CREATE TABLE IF NOT EXISTS users (
     last_login TIMESTAMP
 )
 
-CREATE TABLE IF NOT EXISTS nail_colors (
+CREATE TABLE IF NOT EXISTS colors (
     sku INTEGER,
     name VARCHAR ( 255 ),
     emoji VARCHAR ( 255 ),
     cssname VARCHAR ( 255 )
 )
 -- they don't match
--- INSERT INTO nail_colors (sku, name, emoji, cssname) VALUES
+-- INSERT INTO colors (sku, name, emoji, cssname) VALUES
 -- (0, 'black', '⬛', 'black'),
 -- (1, 'red', '🟥', 'red'),
 -- (2, 'turquoise', '🟦', 'turquoise'),
@@ -43,14 +43,14 @@ CREATE TABLE IF NOT EXISTS nail_colors (
 -- ['rose', '🌹', 'pink']
 -- ]
 
-CREATE TABLE IF NOT EXISTS nail_parts (
+CREATE TABLE IF NOT EXISTS parts (
     name VARCHAR ( 255 ) NOT NULL,
     size VARCHAR ( 255 ) NOT NULL,
     color VARCHAR ( 255 ),
     qty INTEGER
 )
 
-CREATE TABLE IF NOT EXISTS nail_items (
+CREATE TABLE IF NOT EXISTS items (
     name VARCHAR ( 255 ) NOT NULL,
     size VARCHAR ( 255 ) NOT NULL,
     a_color VARCHAR ( 255 ),
@@ -59,7 +59,7 @@ CREATE TABLE IF NOT EXISTS nail_items (
     qty INTEGER
 )
 
-CREATE TABLE IF NOT EXISTS nail_types (
+CREATE TABLE IF NOT EXISTS types (
     name VARCHAR ( 255 ),
     sku INTEGER
 )
@@ -72,7 +72,7 @@ CREATE TABLE IF NOT EXISTS nail_types (
 -- ['Greeting Card', '11']
 -- ]
 
-CREATE TABLE IF NOT EXISTS nail_shirts (
+CREATE TABLE IF NOT EXISTS shirts (
     nombre VARCHAR ( 255 ) NOT NULL,
     a VARCHAR ( 255 ),
     b VARCHAR ( 255 ),
@@ -81,22 +81,22 @@ CREATE TABLE IF NOT EXISTS nail_shirts (
     sku INTEGER
 )
 
-CREATE TABLE IF NOT EXISTS nail_boxes (
+CREATE TABLE IF NOT EXISTS boxes (
     name VARCHAR ( 255 ),
     qty INTEGER
 )
 
-CREATE TABLE IF NOT EXISTS nail_boxprod (
+CREATE TABLE IF NOT EXISTS boxprod (
     name VARCHAR ( 255 ),
     qty INTEGER
 )
 
-CREATE TABLE IF NOT EXISTS nail_boxused (
+CREATE TABLE IF NOT EXISTS boxused (
     name VARCHAR ( 255 ),
     qty INTEGER
 )
 
-CREATE TABLE IF NOT EXISTS nail_projections (
+CREATE TABLE IF NOT EXISTS projections (
     name VARCHAR ( 255 ) NOT NULL,
     size VARCHAR ( 255 ) NOT NULL,
     a_color VARCHAR ( 255 ),
@@ -107,7 +107,7 @@ CREATE TABLE IF NOT EXISTS nail_projections (
     sku BIGINT
 )
 
-CREATE TABLE IF NOT EXISTS nail_queueItems (
+CREATE TABLE IF NOT EXISTS queueItems (
     name VARCHAR ( 255 ) NOT NULL,
     size VARCHAR ( 255 ) NOT NULL,
     a_color VARCHAR ( 255 ),
@@ -118,14 +118,14 @@ CREATE TABLE IF NOT EXISTS nail_queueItems (
     sku BIGINT
 )
 
-CREATE TABLE IF NOT EXISTS nail_queueParts (
+CREATE TABLE IF NOT EXISTS queueParts (
     name VARCHAR ( 255 ) NOT NULL,
     size VARCHAR ( 255 ) NOT NULL,
     color VARCHAR ( 255 ),
     qty INTEGER
 )
 
-CREATE TABLE IF NOT EXISTS nail_cycles (
+CREATE TABLE IF NOT EXISTS cycles (
     id SERIAL UNIQUE NOT NULL,
     name VARCHAR (255),
     created_on TIMESTAMP,
