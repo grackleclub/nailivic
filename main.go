@@ -1,6 +1,7 @@
 package main
 
 import (
+	"bytes"
 	"embed"
 	"fmt"
 	"log/slog"
@@ -14,6 +15,31 @@ const embedDir = "static"
 var content embed.FS // object representing the embedded directory
 
 var log *slog.Logger
+
+// example of composite types a template might receive page
+// and parse page.nav.bar, page.head, page.footer, etc
+type page struct {
+	nav    navbar
+	head   head
+	footer footer
+}
+type navbar struct{}
+type head struct{}
+type footer struct{}
+
+func newPage() (page, error) {
+	// return page{
+	// 	nav:    navbar{},
+	// 	head:   head{
+	// 		Title: "nailivic",
+
+	// 	},
+	// 	footer: footer{
+	// 		Year: 2021,
+	// 	},
+	// }, nil
+	return page{}, fmt.Errorf("not implemented")
+}
 
 func init() {
 	// setup logger
@@ -39,8 +65,14 @@ func main() {
 		panic(err)
 	}
 
-	// routes
-	http.HandleFunc("/", logMdl(serveRoot))
+	// ROUTES
+	// full pages
+	http.HandleFunc("/", logMW(serveRoot))
+	http.HandleFunc("/login", logMW(serveLogin))
+	// http.HandleFunc("/about", logMW(serveAbout)) // TODO (maybe?)
+	// htmx components
+	http.HandleFunc("/htmx/{component}", logMW(serveHtmx))
+	// static files
 	http.Handle("/static/",
 		http.FileServer(http.FS(content)),
 	)
@@ -61,8 +93,8 @@ func main() {
 	log.Info("server stopped", "port", port)
 }
 
-// log is a middleware that logs all incoming requests
-func logMdl(next http.HandlerFunc) http.HandlerFunc {
+// logMW is a middleware that logs all incoming requests
+func logMW(next http.HandlerFunc) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		log.Debug("request received",
 			"method", r.Method,
@@ -77,39 +109,87 @@ func logMdl(next http.HandlerFunc) http.HandlerFunc {
 	}
 }
 
+type index struct {
+	Name       string
+	Title      string
+	Stylesheet string
+}
+
+func serveLogin(w http.ResponseWriter, r *http.Request) {
+	http.Error(w, "not implemented", http.StatusTeapot)
+}
+
 // serveRoot is the base handler for the root (bare) path ("/")
 func serveRoot(w http.ResponseWriter, r *http.Request) {
 	// order matters (parent -> child)
-	tmpl, err := template.ParseFS(content,
+	templates := []string{
 		"static/html/index.html",
 		"static/html/head.html",
 		"static/html/footer.html",
-	)
-	if err != nil {
-		log.Error("failed to parse template",
-			"error", err,
-		)
-		http.Error(w, "parse error", http.StatusInternalServerError)
 	}
-	// TODO should this be structured and abstracted differently?
-	data := struct {
-		Name       string
-		Title      string
-		Stylesheet string
-	}{
+	data := index{
 		Name:       "Nailivic Studios!!",
 		Title:      "nailivic",
 		Stylesheet: "static/css/style.css",
 	}
-	log.Debug("templates and data parsed", "data", data)
 	w.Header().Set("X-Custom-Header", "special :)")
-
-	err = tmpl.Execute(w, data)
+	err := writeTemplate(w, templates, data)
 	if err != nil {
-		log.Error("failed to execute template",
+		log.Error("failed to write template",
 			"error", err,
+			"templates", templates,
 		)
-		http.Error(w, "serve error", http.StatusInternalServerError)
-		return
 	}
+	log.Debug("root served", "templates", templates)
+}
+
+// serveHtmx dynamically serves htmx components based on the path
+func serveHtmx(w http.ResponseWriter, r *http.Request) {
+	// get the component name from the path
+	componentName := r.PathValue("component")
+	log.Info("htmx component requested", "name", componentName)
+
+	// serve the appropriate htmx component based on name from path
+	var err error
+	w.Header().Set("X-htmx-component-name", componentName)
+	switch componentName {
+	case "special":
+		err = writeTemplate(w, []string{"static/html/special.html"}, nil)
+	default:
+		http.Error(w, "missing or invalid htmx component name", http.StatusBadRequest)
+	}
+	log.Warn("wha happen")
+	if err != nil {
+		log.Error("failed to write htmx component",
+			"error", err,
+			"component", componentName,
+		)
+	}
+}
+
+func writeTemplate(w http.ResponseWriter, templatePaths []string, data interface{}) error {
+	tmpl, err := template.ParseFS(content, templatePaths...)
+	if err != nil {
+		return fmt.Errorf("failed to parse template: %w", err)
+	}
+	// write to buffer first to allow inspection
+	// because if a child template is called before a parent template,
+	// the output will be empty
+	var buf bytes.Buffer
+	err = tmpl.Execute(&buf, data)
+	if err != nil {
+		return fmt.Errorf("failed to execute template: %w", err)
+	}
+	if buf.Len() == 0 {
+		return fmt.Errorf("template output is empty")
+	}
+	b, err := buf.WriteTo(w)
+	if err != nil {
+		return fmt.Errorf("failed to write template to response: %w", err)
+	}
+	log.Debug("template executed",
+		"bytes_read", buf.Len(),
+		"bytes_written", b,
+	)
+	return nil
 }
