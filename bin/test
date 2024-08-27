@@ -1,0 +1,31 @@
+#!/usr/bin/env bash
+
+echo "🧪 Running integration tests"
+
+PASSWORD="mysecretpassword"
+
+# require root
+if [ "$(id -u)" != "0" ]; then
+  echo "❌ root required" 1>&2
+  exit 1
+fi
+
+sudo docker compose up -d
+sleep 2
+trap "sudo docker compose down" EXIT
+
+# check a simple connecton with psql
+if ! psql \
+  "postgresql://postgres:$PASSWORD@localhost:5432/postgres" \
+  -c "SELECT 'Connected OK using psql';"; then
+    echo "❌ psql failed"
+    exit 1
+fi
+
+# run go tests
+if ! /usr/local/go/bin/go test -v ./... -tags=integration; then
+    echo "❌ Tests failed"
+    exit 1
+fi
+
+
