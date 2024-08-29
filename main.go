@@ -56,6 +56,7 @@ func main() {
 
 	// routes
 	http.HandleFunc("/", logMiddleware(serveRoot))
+	http.HandleFunc("/snippet", logMiddleware(serveSnippet))
 	http.Handle("/static/",
 		http.FileServer(http.FS(content)),
 	)
@@ -140,4 +141,20 @@ func serveRoot(w http.ResponseWriter, r *http.Request) {
 		)
 		http.Error(w, "serve error", http.StatusInternalServerError)
 	}
+}
+
+func serveSnippet(w http.ResponseWriter, r *http.Request) {
+	f, err := content.ReadFile("static/html/snippet.html")
+	if err != nil {
+		log.Error("failed to read file",
+			"error", err,
+		)
+		http.Error(w, "read error", http.StatusInternalServerError)
+	}
+	log.Debug("file read",
+		"file", "snippet.html",
+		"contents", string(f),
+	)
+	w.Header().Set("X-Snippet-Route", "we made it")
+	w.Write([]byte(string(f)))
 }

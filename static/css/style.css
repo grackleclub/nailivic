@@ -94,7 +94,7 @@ div {
     padding: var(--spacer);
 }
 
-img {
+img, *.csv {
     height: 10rem;
     width: 10rem;
 }
