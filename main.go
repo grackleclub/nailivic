@@ -110,9 +110,9 @@ func logMW(next http.HandlerFunc) http.HandlerFunc {
 }
 
 type index struct {
-	Name       string
-	Title      string
-	Stylesheet string
+	Name        string
+	Title       string
+	Stylesheets []string
 }
 
 func serveLogin(w http.ResponseWriter, r *http.Request) {
@@ -129,9 +129,12 @@ func serveRoot(w http.ResponseWriter, r *http.Request) {
 		"static/html/login.html",
 	}
 	data := index{
-		Name:       "Nailivic Studios!!",
-		Title:      "nailivic",
-		Stylesheet: "static/css/style.css",
+		Name:  "Nailivic Studios!!",
+		Title: "nailivic",
+		Stylesheets: []string{
+			"static/css/zero.css",
+			"static/css/style.css",
+		},
 	}
 	w.Header().Set("X-Custom-Header", "special :)")
 	err := writeTemplate(w, templates, data)
