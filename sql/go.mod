@@ -1,4 +1,4 @@
-module github.com/ddbgio/ddbg
+module github.com/ddbgio/nailivic
 
 go 1.23.0
 
