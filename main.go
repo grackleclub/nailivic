@@ -126,6 +126,7 @@ func serveRoot(w http.ResponseWriter, r *http.Request) {
 		"static/html/index.html",
 		"static/html/head.html",
 		"static/html/footer.html",
+		"static/html/login.html",
 	}
 	data := index{
 		Name:       "Nailivic Studios!!",

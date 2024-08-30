@@ -86,15 +86,20 @@ a {
     color: var(--clr-neutral-100);
 }
 
-form, input {
+.login {
     display: block;
+    padding: var(--spacer);
+}
+
+input {
+    display: block;;
 }
 
 div {
     padding: var(--spacer);
 }
 
-img, *.csv {
+svg, img {
     height: 10rem;
     width: 10rem;
 }

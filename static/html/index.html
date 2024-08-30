@@ -4,13 +4,16 @@
   <body>
     <div>
       <h1>Hello, {{ .Name }}</h1>
-      <button>
+      <button hx-get="/static/img/wind-turbine.svg"
+        hx-trigger="click"
+        hx-target="#svg-1"
+        hx-swap="outerHTML">
         click here!
       </button>
     </div>
     {{ template "login" . }}
-    <div id="svg-1">
-      <img src="/static/img/heart.svg" alt="wind-turbine"/>
+    <div>
+      <img id="svg-1" src="/static/img/heart.svg"/>
     </div>
     {{ template "footer" . }}
   </body>
