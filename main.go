@@ -142,17 +142,21 @@ func serveLogin(w http.ResponseWriter, r *http.Request) {
 		}
 		return
 	case http.MethodPost:
-		// log.Info("login request")
 		// process a login request
 		r.ParseForm()
 		username := r.FormValue("username")
 		password := r.FormValue("password")
+		valid := isValid(username, password)
 		log.Info("login request",
 			"username", username,
-			"password", password,
+			"valid", valid,
 		)
+		if !valid {
+			http.Error(w, "invalid credentials", http.StatusUnauthorized)
+			return
+		}
 
-		w.Write([]byte("POST request\n\n"))
+		serveRoot(w, r)
 		return
 	default:
 		http.Error(w, "method not allowed", http.StatusMethodNotAllowed)
@@ -237,4 +241,11 @@ func writeTemplate(w http.ResponseWriter, templatePaths []string, data interface
 		"bytes_written", b,
 	)
 	return nil
+}
+
+func isValid(username, password string) bool {
+	if username == "user" && password == "pass" {
+		return true
+	}
+	return false
 }
