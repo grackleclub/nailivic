@@ -142,7 +142,16 @@ func serveLogin(w http.ResponseWriter, r *http.Request) {
 		}
 		return
 	case http.MethodPost:
+		// log.Info("login request")
 		// process a login request
+		r.ParseForm()
+		username := r.FormValue("username")
+		password := r.FormValue("password")
+		log.Info("login request",
+			"username", username,
+			"password", password,
+		)
+
 		w.Write([]byte("POST request\n\n"))
 		return
 	default:
