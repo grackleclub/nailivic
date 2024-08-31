@@ -1,11 +1,15 @@
-{{ define "login" }}
-<div class="login">
-    <h2>Who are you?</h2>
-    <form>
-        <label>username</label>
-        <input type="text" name="username" required>
-        <label>password</label>
-        <input type="password" name="password" required>
-    </form>
-</div>
-{{ end }}
+{{ template "head" . }}
+<html lang="en">
+	<body>
+		<div class="login">
+			<h2>Who are you?</h2>
+			<form>
+				<label>username</label>
+				<input type="text" name="username" required>
+				<label>password</label>
+				<input type="password" name="password" required>
+			</form>
+			<button hx-post="/login" hx-trigger="click">login</button>
+		</div>
+	</body>
+</html>

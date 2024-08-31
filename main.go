@@ -116,7 +116,39 @@ type index struct {
 }
 
 func serveLogin(w http.ResponseWriter, r *http.Request) {
-	http.Error(w, "not implemented", http.StatusTeapot)
+
+	switch r.Method {
+	case http.MethodGet:
+		// serve login page
+		templates := []string{
+			"static/html/login.html",
+			"static/html/head.html",
+		}
+		data := index{
+			Name:  "Nailivic Studios Login",
+			Title: "nailivic",
+			Stylesheets: []string{
+				"static/css/zero.css",
+				"static/css/style.css",
+			},
+		}
+		w.Header().Set("I_am", "here")
+		err := writeTemplate(w, templates, data)
+		if err != nil {
+			log.Error("failed to write template",
+				"error", err,
+				"templates", templates,
+			)
+		}
+		return
+	case http.MethodPost:
+		// process a login request
+		w.Write([]byte("POST request\n\n"))
+		return
+	default:
+		http.Error(w, "method not allowed", http.StatusMethodNotAllowed)
+		return
+	}
 }
 
 // serveRoot is the base handler for the root (bare) path ("/")
@@ -126,7 +158,7 @@ func serveRoot(w http.ResponseWriter, r *http.Request) {
 		"static/html/index.html",
 		"static/html/head.html",
 		"static/html/footer.html",
-		"static/html/login.html",
+		// "static/html/login.html",
 	}
 	data := index{
 		Name:  "Nailivic Studios!!",
