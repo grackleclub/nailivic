@@ -110,13 +110,58 @@ func logMW(next http.HandlerFunc) http.HandlerFunc {
 }
 
 type index struct {
-	Name       string
-	Title      string
-	Stylesheet string
+	Name        string
+	Title       string
+	Stylesheets []string
 }
 
 func serveLogin(w http.ResponseWriter, r *http.Request) {
-	http.Error(w, "not implemented", http.StatusTeapot)
+
+	switch r.Method {
+	case http.MethodGet:
+		// serve login page
+		templates := []string{
+			"static/html/login.html",
+			"static/html/head.html",
+		}
+		data := index{
+			Name:  "Nailivic Studios Login",
+			Title: "nailivic",
+			Stylesheets: []string{
+				"static/css/zero.css",
+				"static/css/style.css",
+			},
+		}
+		w.Header().Set("I_am", "here")
+		err := writeTemplate(w, templates, data)
+		if err != nil {
+			log.Error("failed to write template",
+				"error", err,
+				"templates", templates,
+			)
+		}
+		return
+	case http.MethodPost:
+		// process a login request
+		r.ParseForm()
+		username := r.FormValue("username")
+		password := r.FormValue("password")
+		valid := isValid(username, password)
+		log.Info("login request",
+			"username", username,
+			"valid", valid,
+		)
+		if !valid {
+			http.Error(w, "invalid credentials", http.StatusUnauthorized)
+			return
+		}
+
+		serveRoot(w, r)
+		return
+	default:
+		http.Error(w, "method not allowed", http.StatusMethodNotAllowed)
+		return
+	}
 }
 
 // serveRoot is the base handler for the root (bare) path ("/")
@@ -126,11 +171,15 @@ func serveRoot(w http.ResponseWriter, r *http.Request) {
 		"static/html/index.html",
 		"static/html/head.html",
 		"static/html/footer.html",
+		// "static/html/login.html",
 	}
 	data := index{
-		Name:       "Nailivic Studios!!",
-		Title:      "nailivic",
-		Stylesheet: "static/css/style.css",
+		Name:  "Nailivic Studios!!",
+		Title: "nailivic",
+		Stylesheets: []string{
+			"static/css/zero.css",
+			"static/css/style.css",
+		},
 	}
 	w.Header().Set("X-Custom-Header", "special :)")
 	err := writeTemplate(w, templates, data)
@@ -192,4 +241,11 @@ func writeTemplate(w http.ResponseWriter, templatePaths []string, data interface
 		"bytes_written", b,
 	)
 	return nil
+}
+
+func isValid(username, password string) bool {
+	if username == "user" && password == "pass" {
+		return true
+	}
+	return false
 }

@@ -1,0 +1,15 @@
+{{ template "head" . }}
+<html lang="en">
+	<body>
+		<div class="login">
+			<h2>Who are you?</h2>
+			<form hx-post="/login" hx-target="body">
+				<label>username</label>
+				<input type="text" name="username" required>
+				<label>password</label>
+				<input type="password" name="password" required>
+				<input type="submit" value="login">
+			</form>
+		</div>
+	</body>
+</html>
