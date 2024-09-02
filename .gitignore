@@ -1,0 +1,6 @@
+# ignores Air stuff
+.air.toml
+tmp/
+
+# ignore vs code settings
+.vscode/
