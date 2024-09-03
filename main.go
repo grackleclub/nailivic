@@ -7,7 +7,7 @@ import (
 	"net/http"
 	"time"
 
-	cookie "github.com/ddbgio/cookie"
+	cookie "github.com/ddbgio/cookie/v2"
 )
 
 const embedDir = "static"
@@ -129,7 +129,7 @@ func serveRoot(w http.ResponseWriter, r *http.Request) {
 			http.Error(w, "invalid credentials", http.StatusUnauthorized)
 			return
 		}
-		newSecret, err := newSecret(32)
+		sessionToken, err := newSecret(32)
 		if err != nil {
 			log.Error("failed to generate secret",
 				"error", err,
@@ -141,23 +141,26 @@ func serveRoot(w http.ResponseWriter, r *http.Request) {
 		// make a new secret for the user's session
 		var sessionSecret = sessionKey{
 			Username:      username,
-			SessionSecret: newSecret,
+			SessionSecret: sessionToken,
 			Exipiry:       time.Now().Add(sessionDefaultExpiry),
 		}
+
 		// add that secret to the 'backend'
 		// TODO make a real backend
-		secretsBackend = append(secretsBackend, sessionSecret)
+		userID := 1234
+		backend[userID] = sessionSecret
+
 		// add that secret to a new cookie
 		clientCookie := http.Cookie{
 			Name:     cookieName,
-			Value:    newSecret,
+			Value:    sessionToken,
 			Secure:   true,
 			HttpOnly: true,
 			SameSite: http.SameSiteStrictMode,
 			MaxAge:   3600, // 1 hour
 		}
 		// encrypt the cookie
-		err = cookie.WriteEncrypted(w, clientCookie, cookieSecret)
+		err = cookie.WriteEncrypted(w, userID, clientCookie, cookieSecret)
 		if err != nil {
 			log.Error("failed to write cookie",
 				"error", err,
