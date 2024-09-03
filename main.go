@@ -1,14 +1,12 @@
 package main
 
 import (
-	"bytes"
 	"embed"
 	"fmt"
 	"log/slog"
 	"net/http"
-	"text/template"
 
-	"github.com/ddbgio/cookie"
+	cookie "github.com/ddbgio/cookie"
 )
 
 const embedDir = "static"
@@ -17,31 +15,6 @@ const embedDir = "static"
 var content embed.FS // object representing the embedded directory
 
 var log *slog.Logger
-
-// example of composite types a template might receive page
-// and parse page.nav.bar, page.head, page.footer, etc
-type page struct {
-	nav    navbar
-	head   head
-	footer footer
-}
-type navbar struct{}
-type head struct{}
-type footer struct{}
-
-func newPage() (page, error) {
-	// return page{
-	// 	nav:    navbar{},
-	// 	head:   head{
-	// 		Title: "nailivic",
-
-	// 	},
-	// 	footer: footer{
-	// 		Year: 2021,
-	// 	},
-	// }, nil
-	return page{}, fmt.Errorf("not implemented")
-}
 
 func init() {
 	// setup logger
@@ -58,15 +31,17 @@ func init() {
 }
 
 func main() {
+	var err error
 	// setup cookies
-	secret, err := cookie.NewSecret()
+	// TODO this must be changed if more than one server is ever active
+	cookieSecret, err := cookie.NewCookieSecret()
 	if err != nil {
 		log.Error("failed to generate secret",
 			"error", err,
 		)
 		panic(err)
 	}
-	log.Warn("secret", "secret", secret)
+	log.Warn("secret", "secret", string(cookieSecret))
 
 	// read embed dir
 	_, err = content.ReadDir(embedDir)
@@ -105,26 +80,10 @@ func main() {
 	log.Info("server stopped", "port", port)
 }
 
-// logMW is a middleware that logs all incoming requests
-func logMW(next http.HandlerFunc) http.HandlerFunc {
-	return func(w http.ResponseWriter, r *http.Request) {
-		log.Debug("request received",
-			"method", r.Method,
-			"remote", r.RemoteAddr,
-			"path", r.URL.Path,
-			"refer", r.Referer(),
-			"user-agent", r.UserAgent(),
-			"opaque", r.URL.Opaque,
-			"bytes", r.ContentLength,
-		)
-		next(w, r)
-	}
-}
-
 type index struct {
 	Name        string
 	Title       string
-	Stylesheets []string
+	Stylesheets []string // path to stylesheets (in order!)
 }
 
 func serveLogin(w http.ResponseWriter, r *http.Request) {
@@ -201,62 +160,4 @@ func serveRoot(w http.ResponseWriter, r *http.Request) {
 		)
 	}
 	log.Debug("root served", "templates", templates)
-}
-
-// serveHtmx dynamically serves htmx components based on the path
-func serveHtmx(w http.ResponseWriter, r *http.Request) {
-	// get the component name from the path
-	componentName := r.PathValue("component")
-	log.Info("htmx component requested", "name", componentName)
-
-	// serve the appropriate htmx component based on name from path
-	var err error
-	w.Header().Set("X-htmx-component-name", componentName)
-	switch componentName {
-	case "special":
-		err = writeTemplate(w, []string{"static/html/special.html"}, nil)
-	default:
-		http.Error(w, "missing or invalid htmx component name", http.StatusBadRequest)
-	}
-	log.Warn("wha happen")
-	if err != nil {
-		log.Error("failed to write htmx component",
-			"error", err,
-			"component", componentName,
-		)
-	}
-}
-
-func writeTemplate(w http.ResponseWriter, templatePaths []string, data interface{}) error {
-	tmpl, err := template.ParseFS(content, templatePaths...)
-	if err != nil {
-		return fmt.Errorf("failed to parse template: %w", err)
-	}
-	// write to buffer first to allow inspection
-	// because if a child template is called before a parent template,
-	// the output will be empty
-	var buf bytes.Buffer
-	err = tmpl.Execute(&buf, data)
-	if err != nil {
-		return fmt.Errorf("failed to execute template: %w", err)
-	}
-	if buf.Len() == 0 {
-		return fmt.Errorf("template output is empty")
-	}
-	b, err := buf.WriteTo(w)
-	if err != nil {
-		return fmt.Errorf("failed to write template to response: %w", err)
-	}
-	log.Debug("template executed",
-		"bytes_read", buf.Len(),
-		"bytes_written", b,
-	)
-	return nil
-}
-
-func isValid(username, password string) bool {
-	if username == "user" && password == "pass" {
-		return true
-	}
-	return false
 }
