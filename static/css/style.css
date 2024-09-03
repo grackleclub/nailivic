@@ -92,3 +92,32 @@ svg, img {
     height: 10rem;
     width: 10rem;
 }
+
+table {
+    width: 75vw;
+    color: var(--clr-neutral-200);
+    border-collapse: collapse;
+    border: 1px solid var(--clr-neutral-200);
+    background-color: var(--clr-neutral-400);
+}
+
+tr {
+    border: 1px solid var(--clr-neutral-200);
+}
+
+th {
+    border: 1px solid var(--clr-neutral-200);
+    background-color: var(--clr-neutral-100);
+}
+
+td {
+    border: 1px solid var(--clr-neutral-200);
+}
+
+tr:nth-child(even) {
+    background-color: var(--clr-neutral-300);
+}
+
+tr:hover {
+    background-color: var(--clr-neutral-100);
+}
