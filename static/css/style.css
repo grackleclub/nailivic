@@ -19,14 +19,14 @@
     --fw-700: 700;
     --fw-900: 900;
 
-    --clr-neutral-100: #e6e3f6;
-    --clr-neutral-200: #a9585f;
-    --clr-neutral-300: #4b7ea9;
-    --clr-neutral-400: ;
+    --clr-neutral-100: #a9a77f;
+    --clr-neutral-200: #090909;
+    --clr-neutral-300: #74783f;
+    --clr-neutral-400: #3f4900;
     --clr-neutral-500: ;
     --clr-neutral-900: ;
   
-    --clr-primary-300: #2B2A33;
+    --clr-primary-300: #1a1b00;
     --clr-primary-400: red;
   
     --br: 1rem;
@@ -102,4 +102,26 @@ div {
 svg, img {
     height: 10rem;
     width: 10rem;
+}
+
+table {
+    width: 75vw;
+    border-collapse: collapse;
+    color: var(--clr-neutral-200);
+    border: 1px solid var(--clr-neutral-200);
+    background-color: var(--clr-neutral-300);
+}
+
+th {
+    background-color: var(--clr-neutral-100);
+}
+
+th, td {
+    padding: .3rem;
+    text-align: left;
+    border: 1px solid var(--clr-neutral-200);
+}
+
+tr:nth-child(even) {
+    background-color: var(--clr-neutral-400);
 }
