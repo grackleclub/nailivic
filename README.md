@@ -11,7 +11,11 @@ Via `go install`
 ```bash
 go install github.com/air-verse/air@latest
 ```
-Then add an alias to your .bashrc(or whatever you have) like `alias air='~/usr/go/bin/air'` so you can run the air server with fewer keystrokes.
+
+Then add an alias to your `.bashrc` (or whatever you have) so you can run the air server with fewer keystrokes:
+```bash
+alias air='~/usr/go/bin/air'
+```
 
 Github for [air](https://github.com/air-verse/air).
 
