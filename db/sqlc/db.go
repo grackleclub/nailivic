@@ -2,7 +2,7 @@
 // versions:
 //   sqlc v1.27.0
 
-package dal
+package sqlc
 
 import (
 	"context"
@@ -24,17 +24,41 @@ func New(db DBTX) *Queries {
 func Prepare(ctx context.Context, db DBTX) (*Queries, error) {
 	q := Queries{db: db}
 	var err error
-	if q.foosStmt, err = db.PrepareContext(ctx, foos); err != nil {
-		return nil, fmt.Errorf("error preparing query Foos: %w", err)
+	if q.sessionStmt, err = db.PrepareContext(ctx, session); err != nil {
+		return nil, fmt.Errorf("error preparing query Session: %w", err)
+	}
+	if q.sessionAddStmt, err = db.PrepareContext(ctx, sessionAdd); err != nil {
+		return nil, fmt.Errorf("error preparing query SessionAdd: %w", err)
+	}
+	if q.userStmt, err = db.PrepareContext(ctx, user); err != nil {
+		return nil, fmt.Errorf("error preparing query User: %w", err)
+	}
+	if q.userAddStmt, err = db.PrepareContext(ctx, userAdd); err != nil {
+		return nil, fmt.Errorf("error preparing query UserAdd: %w", err)
 	}
 	return &q, nil
 }
 
 func (q *Queries) Close() error {
 	var err error
-	if q.foosStmt != nil {
-		if cerr := q.foosStmt.Close(); cerr != nil {
-			err = fmt.Errorf("error closing foosStmt: %w", cerr)
+	if q.sessionStmt != nil {
+		if cerr := q.sessionStmt.Close(); cerr != nil {
+			err = fmt.Errorf("error closing sessionStmt: %w", cerr)
+		}
+	}
+	if q.sessionAddStmt != nil {
+		if cerr := q.sessionAddStmt.Close(); cerr != nil {
+			err = fmt.Errorf("error closing sessionAddStmt: %w", cerr)
+		}
+	}
+	if q.userStmt != nil {
+		if cerr := q.userStmt.Close(); cerr != nil {
+			err = fmt.Errorf("error closing userStmt: %w", cerr)
+		}
+	}
+	if q.userAddStmt != nil {
+		if cerr := q.userAddStmt.Close(); cerr != nil {
+			err = fmt.Errorf("error closing userAddStmt: %w", cerr)
 		}
 	}
 	return err
@@ -74,15 +98,21 @@ func (q *Queries) queryRow(ctx context.Context, stmt *sql.Stmt, query string, ar
 }
 
 type Queries struct {
-	db       DBTX
-	tx       *sql.Tx
-	foosStmt *sql.Stmt
+	db             DBTX
+	tx             *sql.Tx
+	sessionStmt    *sql.Stmt
+	sessionAddStmt *sql.Stmt
+	userStmt       *sql.Stmt
+	userAddStmt    *sql.Stmt
 }
 
 func (q *Queries) WithTx(tx *sql.Tx) *Queries {
 	return &Queries{
-		db:       tx,
-		tx:       tx,
-		foosStmt: q.foosStmt,
+		db:             tx,
+		tx:             tx,
+		sessionStmt:    q.sessionStmt,
+		sessionAddStmt: q.sessionAddStmt,
+		userStmt:       q.userStmt,
+		userAddStmt:    q.userAddStmt,
 	}
 }

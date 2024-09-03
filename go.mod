@@ -3,6 +3,7 @@ module github.com/ddbgio/ddbg
 go 1.23.0
 
 require (
+	github.com/ddbgio/cookie/v2 v2.0.2
 	github.com/lmittmann/tint v1.0.5
 	github.com/mattn/go-isatty v0.0.20
 	github.com/stretchr/testify v1.9.0

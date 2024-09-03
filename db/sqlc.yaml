@@ -1,12 +1,12 @@
 version: "2"
 sql:
   - engine: "postgresql"
-    schema: "sql/schema.sql"
-    queries: "sql/queries.sql"
+    schema: "schema.sql"
+    queries: "queries.sql"
     gen:
       go:
-        package: "dal"
-        out: "sql/dal"
+        package: "sqlc"
+        out: "sqlc"
         emit_json_tags: true
         emit_prepared_queries: true
         emit_interface: true
