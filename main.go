@@ -7,6 +7,8 @@ import (
 	"log/slog"
 	"net/http"
 	"text/template"
+
+	"github.com/ddbgio/cookie"
 )
 
 const embedDir = "static"
@@ -56,8 +58,18 @@ func init() {
 }
 
 func main() {
+	// setup cookies
+	secret, err := cookie.NewSecret()
+	if err != nil {
+		log.Error("failed to generate secret",
+			"error", err,
+		)
+		panic(err)
+	}
+	log.Warn("secret", "secret", secret)
+
 	// read embed dir
-	_, err := content.ReadDir(embedDir)
+	_, err = content.ReadDir(embedDir)
 	if err != nil {
 		log.Error("failed to read directory",
 			"error", err,
