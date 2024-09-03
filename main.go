@@ -55,6 +55,10 @@ func main() {
 		panic(err)
 	}
 
+	// setup database
+	// TODO extract ddbg/auth into it's own package,
+	// and use that for the backend
+
 	// ROUTES
 	// full pages
 	http.HandleFunc("/", logMW(serveRoot))
