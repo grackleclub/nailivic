@@ -116,6 +116,10 @@ type index struct {
 }
 
 func serveLogin(w http.ResponseWriter, r *http.Request) {
+<<<<<<< HEAD
+=======
+
+>>>>>>> main
 	switch r.Method {
 	case http.MethodGet:
 		// serve login page

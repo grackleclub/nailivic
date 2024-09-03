@@ -47,7 +47,10 @@
 
 /* reset */
 /* *, *::before, *::after {
+<<<<<<< HEAD
 /* *, *::before, *::after {
+=======
+>>>>>>> main
     box-sizing: border-box;
 }
 
@@ -75,10 +78,13 @@ body {
     flex-direction: column;
     align-items: center;
     padding: var(--spacer);
+<<<<<<< HEAD
     display: flex;
     flex-direction: column;
     align-items: center;
     padding: var(--spacer);
+=======
+>>>>>>> main
     font-family: var(--ff-sans);
     font-size: var(--fs-200);
     line-height: 2;
@@ -88,6 +94,7 @@ body {
 
 a {
     text-decoration: none;
+<<<<<<< HEAD
     line-height: 2;
     color: var(--clr-neutral-100);
     background-color: var(--clr-primary-300);
@@ -95,6 +102,8 @@ a {
 
 a {
     text-decoration: none;
+=======
+>>>>>>> main
     color: var(--clr-neutral-100);
 }
 
