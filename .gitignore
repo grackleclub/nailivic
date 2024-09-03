@@ -2,9 +2,5 @@
 .air.toml
 tmp/
 
-<<<<<<< HEAD
-# ignores vscode stuff
-=======
 # ignore vs code settings
->>>>>>> a0c5356 (Kat/login (#5))
 .vscode/

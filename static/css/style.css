@@ -26,7 +26,7 @@
     --clr-neutral-500: ;
     --clr-neutral-900: ;
   
-    --clr-primary-300: #1a1b00;
+    --clr-primary-300: #2B2A33;
     --clr-primary-400: red;
   
     --br: 1rem;
@@ -46,6 +46,7 @@
 }
 
 /* reset */
+/* *, *::before, *::after {
 /* *, *::before, *::after {
     box-sizing: border-box;
 }
@@ -74,8 +75,19 @@ body {
     flex-direction: column;
     align-items: center;
     padding: var(--spacer);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: var(--spacer);
     font-family: var(--ff-sans);
     font-size: var(--fs-200);
+    line-height: 2;
+    color: var(--clr-neutral-100);
+    background-color: var(--clr-primary-300);
+}
+
+a {
+    text-decoration: none;
     line-height: 2;
     color: var(--clr-neutral-100);
     background-color: var(--clr-primary-300);
@@ -102,26 +114,4 @@ div {
 svg, img {
     height: 10rem;
     width: 10rem;
-}
-
-table {
-    width: 75vw;
-    border-collapse: collapse;
-    color: var(--clr-neutral-200);
-    border: 1px solid var(--clr-neutral-200);
-    background-color: var(--clr-neutral-300);
-}
-
-th {
-    background-color: var(--clr-neutral-100);
-}
-
-th, td {
-    padding: .3rem;
-    text-align: left;
-    border: 1px solid var(--clr-neutral-200);
-}
-
-tr:nth-child(even) {
-    background-color: var(--clr-neutral-400);
 }
