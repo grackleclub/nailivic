@@ -4,8 +4,9 @@ Go + htmx rewrite of [nailivic](https://github.com/Turkosaurus/nailivic)
 ## frontend
 `htmx` drives the frontend, utilizing HTML as the engine of application state.
 
-### Air - live reload for Go apps
-To see your changes in realtime without having to restart your server
+### Air
+Live reload for Go apps, to see your changes in realtime without having to restart your server
+
 Via `go install`
 ```bash
 go install github.com/air-verse/air@latest
