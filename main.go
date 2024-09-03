@@ -57,7 +57,7 @@ func main() {
 	// ROUTES
 	// full pages
 	http.HandleFunc("/", logMW(serveRoot))
-	http.HandleFunc("/login", logMW(serveLogin))
+	http.HandleFunc("/secret", logMW(authMW(serveRoot)))
 	// http.HandleFunc("/about", logMW(serveAbout)) // TODO (maybe?)
 	// htmx components
 	http.HandleFunc("/htmx/{component}", logMW(serveHtmx))
@@ -88,7 +88,7 @@ type index struct {
 	Stylesheets []string // path to stylesheets (in order!)
 }
 
-func serveLogin(w http.ResponseWriter, r *http.Request) {
+func serveRoot(w http.ResponseWriter, r *http.Request) {
 	switch r.Method {
 	case http.MethodGet:
 		// serve login page
@@ -119,6 +119,7 @@ func serveLogin(w http.ResponseWriter, r *http.Request) {
 		username := r.FormValue("username")
 		password := r.FormValue("password")
 		valid := isValid(username, password)
+		// TODO use bcrypt/auth package
 		log.Info("login request",
 			"username", username,
 			"valid", valid,
@@ -127,8 +128,40 @@ func serveLogin(w http.ResponseWriter, r *http.Request) {
 			http.Error(w, "invalid credentials", http.StatusUnauthorized)
 			return
 		}
+		newSecret, err := newSecret(32)
+		if err != nil {
+			log.Error("failed to generate secret",
+				"error", err,
+			)
+			http.Error(w, "auth failure", http.StatusInternalServerError)
+			return
+		}
 
-		serveRoot(w, r)
+		// make a new secret for the user's session
+		var sessionSecret secret
+		sessionSecret.Username = username
+		sessionSecret.SessionSecret = newSecret
+		// add that secret to the 'backend'
+		// TODO make a real backend
+		secrets = append(secrets, sessionSecret)
+		// add that secret to a new cookie
+		clientCookie := http.Cookie{
+			Name:     cookieName,
+			Value:    newSecret,
+			Secure:   true,
+			HttpOnly: true,
+			SameSite: http.SameSiteStrictMode,
+		}
+		// encrypt the cookie
+		err = cookie.WriteEncrypted(w, clientCookie, cookieSecret)
+		if err != nil {
+			log.Error("failed to write cookie",
+				"error", err,
+			)
+			http.Error(w, "failed to write cookie", http.StatusInternalServerError)
+			return
+		}
+		serveDash(w, r)
 		return
 	default:
 		http.Error(w, "method not allowed", http.StatusMethodNotAllowed)
@@ -136,8 +169,13 @@ func serveLogin(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+func serveSecret(w http.ResponseWriter, r *http.Request) {
+	w.WriteHeader(http.StatusTeapot)
+	w.Write([]byte("I am a teapot"))
+}
+
 // serveRoot is the base handler for the root (bare) path ("/")
-func serveRoot(w http.ResponseWriter, r *http.Request) {
+func serveDash(w http.ResponseWriter, r *http.Request) {
 	// order matters (parent -> child)
 	templates := []string{
 		"static/html/index.html",
