@@ -16,6 +16,8 @@ var content embed.FS // object representing the embedded directory
 
 var log *slog.Logger
 
+var cookieSecret []byte
+
 func init() {
 	// setup logger
 	opts := slog.HandlerOptions{
@@ -34,7 +36,7 @@ func main() {
 	var err error
 	// setup cookies
 	// TODO this must be changed if more than one server is ever active
-	cookieSecret, err := cookie.NewCookieSecret()
+	cookieSecret, err = cookie.NewCookieSecret()
 	if err != nil {
 		log.Error("failed to generate secret",
 			"error", err,
