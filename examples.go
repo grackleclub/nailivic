@@ -5,26 +5,62 @@ import "fmt"
 // example of composite types a template might receive page
 // and parse page.nav.bar, page.head, page.footer, etc
 type page struct {
-	nav    navbar
-	head   head
-	body   body
-	footer footer
+	// Nav    navbar
+	Head   head
+	Footer footer
 }
-type navbar struct{}
-type head struct{}
-type footer struct{}
-type body struct{}
 
-func newPage() (page, error) {
-	// return page{
-	// 	nav:    navbar{},
-	// 	head:   head{
-	// 		Title: "nailivic",
+type head struct {
+	Title       string
+	Stylesheets []string
+}
 
-	// 	},
-	// 	footer: footer{
-	// 		Year: 2021,
-	// 	},
-	// }, nil
-	return page{}, fmt.Errorf("not implemented")
+//	type navbar struct {
+//		Items []string
+//	}
+type footer struct {
+	Year string
+}
+
+func getNewPage(name string) (page, error) {
+	switch name {
+	case "login":
+		return page{}, fmt.Errorf("not implemented")
+	case "crazy":
+		newPage := page{
+			Head: head{
+				Title:       "My Crazy Page",
+				Stylesheets: []string{"crazy.css"},
+			},
+			Footer: footer{
+				Year: "2020",
+			},
+		}
+		return newPage, nil
+	case "index":
+		newPage := page{
+			Head: head{
+				Title: "My Page",
+				Stylesheets: []string{
+					"static/css/style.css",
+					"static/css/zero.css"},
+			},
+			Footer: footer{
+				Year: "2018",
+			},
+		}
+
+		return newPage, nil
+	default:
+		return page{}, fmt.Errorf("invalid page name: %s", name)
+	}
+}
+
+func doStuffWrapper() {
+	page, err := getNewPage("index")
+	if err != nil {
+		fmt.Println("error getting new page:", err)
+		return
+	}
+	fmt.Println("new page:", page)
 }

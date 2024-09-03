@@ -87,30 +87,32 @@ func main() {
 	log.Info("server stopped", "port", port)
 }
 
-type index struct {
-	Name        string
-	Title       string
-	Stylesheets []string // path to stylesheets (in order!)
-}
-
 func serveRoot(w http.ResponseWriter, r *http.Request) {
 	switch r.Method {
 	case http.MethodGet:
-		// serve login page
+		// templates
 		templates := []string{
 			"static/html/login.html",
 			"static/html/head.html",
+			"static/html/footer.html",
 		}
-		data := index{
-			Name:  "Nailivic Studios Login",
-			Title: "nailivic",
-			Stylesheets: []string{
-				"static/css/zero.css",
-				"static/css/style.css",
-			},
+		// data
+		data, err := getNewPage("index")
+		if err != nil {
+			log.Error("failed to get page data",
+				"error", err,
+			)
+			http.Error(w, "failed to get page data", http.StatusInternalServerError)
+			return
 		}
+		// other stufff
 		w.Header().Set("I_am", "here")
-		err := writeTemplate(w, templates, data)
+		log.Info("serving login page",
+			"templates", templates,
+			"data", data,
+		)
+		// combine and write
+		err = writeTemplate(w, templates, data)
 		if err != nil {
 			log.Error("failed to write template",
 				"error", err,
@@ -194,16 +196,17 @@ func serveDash(w http.ResponseWriter, r *http.Request) {
 		"static/html/footer.html",
 		// "static/html/login.html",
 	}
-	data := index{
-		Name:  "Nailivic Studios!!",
-		Title: "nailivic",
-		Stylesheets: []string{
-			"static/css/zero.css",
-			"static/css/style.css",
-		},
+	data, err := getNewPage("index")
+	if err != nil {
+		log.Error("failed to get page data",
+			"error", err,
+		)
+		http.Error(w, "failed to get page data", http.StatusInternalServerError)
+		return
 	}
+
 	w.Header().Set("X-Custom-Header", "special :)")
-	err := writeTemplate(w, templates, data)
+	err = writeTemplate(w, templates, data)
 	if err != nil {
 		log.Error("failed to write template",
 			"error", err,

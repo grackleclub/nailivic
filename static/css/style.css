@@ -26,10 +26,10 @@
     --clr-neutral-500: ;
     --clr-neutral-900: ;
   
-    --clr-primary-300: #2B2A33;
+    --clr-primary-300: #1a1b00;
     --clr-primary-400: red;
   
-    --br: 1rem;
+    --br: .25rem;
     --spacer: 1rem;
 }
   
@@ -52,13 +52,8 @@ body {
     flex-direction: column;
     align-items: center;
     padding: var(--spacer);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: var(--spacer);
     font-family: var(--ff-sans);
-    font-size: var(--fs-200);
-    line-height: 2;
+    font-size: var(--fs-300);
     color: var(--clr-neutral-100);
     background-color: var(--clr-primary-300);
 }
@@ -70,8 +65,7 @@ a {
     background-color: var(--clr-primary-300);
 }
 
-a {
-    text-decoration: none;
+a:hover {
     color: var(--clr-neutral-100);
 }
 
@@ -91,6 +85,33 @@ div {
 svg, img {
     height: 10rem;
     width: 10rem;
+}
+
+form {
+    line-height: 2;
+}
+
+input {
+    background: var(--clr-neutral-100);
+    border: none;
+    border-radius: var(--br);
+}
+
+.btn {
+    padding: .3rem;
+    margin-top: var(--spacer);
+    font-size: var(--fs-100);
+    color: var(--clr-neutral-100);
+    background-color: var(--clr-neutral-400);
+    border: none;
+    border-radius: var(--br);
+    cursor: pointer;
+    align-items: center;
+}
+
+.btn:hover {
+    background-color: var(--clr-neutral-100);
+    color: var(--clr-primary-300);
 }
 
 table {
@@ -120,4 +141,10 @@ tr:nth-child(even) {
 
 tr:hover {
     background-color: var(--clr-neutral-100);
+}
+
+.footer, a {
+    padding: var(--spacer);
+    font-size: var(--fs-100);
+    color: var(--clr-neutral-400);
 }
