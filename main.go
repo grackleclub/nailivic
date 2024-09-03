@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log/slog"
 	"net/http"
+	"time"
 
 	cookie "github.com/ddbgio/cookie"
 )
@@ -57,7 +58,7 @@ func main() {
 	// ROUTES
 	// full pages
 	http.HandleFunc("/", logMW(serveRoot))
-	http.HandleFunc("/secret", logMW(authMW(serveRoot)))
+	http.HandleFunc("/secret", logMW(authMW(serveSecret)))
 	// http.HandleFunc("/about", logMW(serveAbout)) // TODO (maybe?)
 	// htmx components
 	http.HandleFunc("/htmx/{component}", logMW(serveHtmx))
@@ -138,12 +139,14 @@ func serveRoot(w http.ResponseWriter, r *http.Request) {
 		}
 
 		// make a new secret for the user's session
-		var sessionSecret secret
-		sessionSecret.Username = username
-		sessionSecret.SessionSecret = newSecret
+		var sessionSecret = sessionKey{
+			Username:      username,
+			SessionSecret: newSecret,
+			Exipiry:       time.Now().Add(sessionDefaultExpiry),
+		}
 		// add that secret to the 'backend'
 		// TODO make a real backend
-		secrets = append(secrets, sessionSecret)
+		secretsBackend = append(secretsBackend, sessionSecret)
 		// add that secret to a new cookie
 		clientCookie := http.Cookie{
 			Name:     cookieName,
@@ -151,6 +154,7 @@ func serveRoot(w http.ResponseWriter, r *http.Request) {
 			Secure:   true,
 			HttpOnly: true,
 			SameSite: http.SameSiteStrictMode,
+			MaxAge:   3600, // 1 hour
 		}
 		// encrypt the cookie
 		err = cookie.WriteEncrypted(w, clientCookie, cookieSecret)
