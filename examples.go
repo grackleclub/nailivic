@@ -45,8 +45,8 @@ func getNewPage(name string) (page, error) {
 			Head: head{
 				Title: "Nailivic",
 				Stylesheets: []string{
-					"static/css/zero.css",
-					"static/css/style.css",
+					"/static/css/zero.css",
+					"/static/css/style.css",
 				},
 			},
 			Footer: footer{
@@ -59,8 +59,8 @@ func getNewPage(name string) (page, error) {
 			Head: head{
 				Title: "Nailivic Dashboard",
 				Stylesheets: []string{
-					"static/css/zero.css",
-					"static/css/style.css",
+					"/static/css/zero.css",
+					"/static/css/style.css",
 				},
 			},
 			Footer: footer{

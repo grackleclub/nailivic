@@ -65,8 +65,8 @@ func main() {
 		http.FileServer(http.FS(content)),
 	)
 	http.HandleFunc("/favicon.ico", func(w http.ResponseWriter, r *http.Request) {
-		// Serve the favicon or ignore the request
-		// http.ServeFile(w, r, "static/favicon.ico")
+		// this doesn't work
+		http.ServeFile(w, r, "static/img/favicon.ico")
 	})
 	// full pages
 	http.HandleFunc("/secret/", logMW(authMW(serveSecret)))
