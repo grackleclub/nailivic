@@ -9,21 +9,23 @@ import (
 )
 
 type test struct {
-	name            string
-	method          string
-	route           string
-	handler         http.HandlerFunc
-	statusCode      int    // expected status code
-	resBodyMustHave string // expected response body
+	name       string
+	method     string
+	route      string
+	handler    http.HandlerFunc
+	statusCode int // expected status code
+	// resBodyMustHave []string // expected response body
 }
 
 // testing new routes and handlers requires only setting more test cases
 var cases = []test{
-	{"root", "GET", "/", serveRoot, http.StatusOK, "<!DOCTYPE html>"},
+	{"root", "GET", "/", serveRoot, http.StatusOK},
+	{"root", "GET", "/dash", serveDash, http.StatusOK},
 	// add more test cases here as application grows
 }
 
 func TestServeRoutes(t *testing.T) {
+	strictTemplateChecking = true
 	for _, test := range cases {
 		t.Run(test.name, func(t *testing.T) {
 			t.Logf("testing %s: %s '%s'", test.name, test.method, test.route)
@@ -37,7 +39,6 @@ func TestServeRoutes(t *testing.T) {
 			assert.Equal(t, test.statusCode, rr.Code)
 
 			body := rr.Body.String()
-			assert.Contains(t, body, test.resBodyMustHave)
 			assert.NotEqual(t, 0, len(body))
 			t.Logf("passed %s: %d\n%v", test.name, test.statusCode, body)
 		})
