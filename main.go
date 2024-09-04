@@ -60,13 +60,6 @@ func main() {
 	// and use that for the backend
 
 	// ROUTES
-	// full pages
-	http.HandleFunc("/secret/", logMW(authMW(serveSecret)))
-	http.HandleFunc("/crazy/", logMW(serveCrazy))
-	http.HandleFunc("/", logMW(serveRoot))
-	// http.HandleFunc("/about", logMW(serveAbout)) // TODO (maybe?)
-	// htmx components
-	http.HandleFunc("/htmx/{component}", logMW(serveHtmx))
 	// static files
 	http.Handle("/static/",
 		http.FileServer(http.FS(content)),
@@ -75,6 +68,13 @@ func main() {
 		// Serve the favicon or ignore the request
 		// http.ServeFile(w, r, "static/favicon.ico")
 	})
+	// full pages
+	http.HandleFunc("/secret/", logMW(authMW(serveSecret)))
+	http.HandleFunc("/crazy/", logMW(serveCrazy))
+	http.HandleFunc("/", logMW(serveRoot))
+	// http.HandleFunc("/about", logMW(serveAbout)) // TODO (maybe?)
+	// htmx components
+	http.HandleFunc("/htmx/{component}", logMW(serveHtmx))
 
 	// start server
 	port := 8008
@@ -123,6 +123,7 @@ func serveRoot(w http.ResponseWriter, r *http.Request) {
 				"error", err,
 				"templates", templates,
 			)
+			http.Error(w, "failed to write template", http.StatusInternalServerError)
 		}
 		return
 	case http.MethodPost:
@@ -238,7 +239,8 @@ func serveCrazy(w http.ResponseWriter, r *http.Request) {
 
 	log.Debug("serving crazy page",
 		"templates", templates,
-		"data", data)
+		"data", data,
+	)
 
 	// w.Header().Set("X-Custom-Header", "special :)")
 	err = writeTemplate(w, templates, data)

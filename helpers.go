@@ -22,7 +22,6 @@ func serveHtmx(w http.ResponseWriter, r *http.Request) {
 	default:
 		http.Error(w, "missing or invalid htmx component name", http.StatusBadRequest)
 	}
-	log.Warn("wha happen")
 	if err != nil {
 		log.Error("failed to write htmx component",
 			"error", err,
@@ -54,6 +53,8 @@ func writeTemplate(w http.ResponseWriter, templatePaths []string, data interface
 	log.Debug("template executed",
 		"bytes_read", buf.Len(),
 		"bytes_written", b,
+		"templates", templatePaths,
+		"data", data, // TODO exclude data after testing
 	)
 	return nil
 }

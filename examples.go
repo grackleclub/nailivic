@@ -29,14 +29,14 @@ func getNewPage(name string) (page, error) {
 	case "crazy":
 		newPage := page{
 			Head: head{
-				Title: "My Crazy Page",
+				Title: "Crazy Title",
 				Stylesheets: []string{
-					"static/css/style.css",
-					"static/css/zero.css",
+					"/static/css/zero.css",
+					"/static/css/style.css",
 				},
 			},
 			Footer: footer{
-				Year: "1643",
+				Year: "9876",
 			},
 		}
 		return newPage, nil
@@ -45,8 +45,8 @@ func getNewPage(name string) (page, error) {
 			Head: head{
 				Title: "Nailivic",
 				Stylesheets: []string{
-					"static/css/style.css",
 					"static/css/zero.css",
+					"static/css/style.css",
 				},
 			},
 			Footer: footer{
@@ -59,8 +59,8 @@ func getNewPage(name string) (page, error) {
 			Head: head{
 				Title: "Nailivic Dashboard",
 				Stylesheets: []string{
-					"static/css/style.css",
 					"static/css/zero.css",
+					"static/css/style.css",
 				},
 			},
 			Footer: footer{
