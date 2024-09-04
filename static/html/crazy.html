@@ -1,17 +1,36 @@
-{{ define "head" }}
 <!DOCTYPE html>
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>{{ .Head.Title }}</title>
+  <!-- <title>{{ .Head.Title }}</title> -->
   <script src="https://unpkg.com/htmx.org@2.0.2"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link
       href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Inline+Display:wght@100..900&display=swap|family=Big+Shoulders+Text:wght@100..900&display=swap|family=Lora:ital,wght@0,400;0,700;1,400;1,700&display=swap"
       rel="stylesheet"/>
-  {{ range .Head.Stylesheets }}
-      <link rel="stylesheet" href="{{ . }}"/>
-  {{ end }}
+      <link rel="stylesheet" href="static/css/zero.css"/>
+      <link rel="stylesheet" href="static/css/style.css"/>
     </head>
-{{ end }}
+<body>
+  <div>
+    <h1>My Crazy Page</h1>
+    <p>Maybe one day this will be the parts page</p>
+    <table>
+      <tr>
+        <th>Part</th>
+        <th>Price</th>
+      </tr>
+      <tr>
+        <td>Widget</td>
+        <td>$5.00</td>
+      </tr>
+      <tr>
+        <td>Gadget</td>
+        <td>$10.00</td>
+      </tr>
+    </table>
+  </div>
+</body>
+<!-- {{ template "footer" . }} -->
+</html>

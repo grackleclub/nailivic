@@ -61,8 +61,9 @@ func main() {
 
 	// ROUTES
 	// full pages
+	http.HandleFunc("/secret/", logMW(authMW(serveSecret)))
+	http.HandleFunc("/crazy/", logMW(serveCrazy))
 	http.HandleFunc("/", logMW(serveRoot))
-	http.HandleFunc("/secret", logMW(authMW(serveSecret)))
 	// http.HandleFunc("/about", logMW(serveAbout)) // TODO (maybe?)
 	// htmx components
 	http.HandleFunc("/htmx/{component}", logMW(serveHtmx))
@@ -70,6 +71,10 @@ func main() {
 	http.Handle("/static/",
 		http.FileServer(http.FS(content)),
 	)
+	http.HandleFunc("/favicon.ico", func(w http.ResponseWriter, r *http.Request) {
+		// Serve the favicon or ignore the request
+		// http.ServeFile(w, r, "static/favicon.ico")
+	})
 
 	// start server
 	port := 8008
@@ -196,7 +201,7 @@ func serveDash(w http.ResponseWriter, r *http.Request) {
 		"static/html/footer.html",
 		// "static/html/login.html",
 	}
-	data, err := getNewPage("index")
+	data, err := getNewPage("dash")
 	if err != nil {
 		log.Error("failed to get page data",
 			"error", err,
@@ -205,13 +210,46 @@ func serveDash(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	w.Header().Set("X-Custom-Header", "special :)")
 	err = writeTemplate(w, templates, data)
 	if err != nil {
 		log.Error("failed to write template",
 			"error", err,
 			"templates", templates,
+			"data", data,
 		)
 	}
 	log.Debug("root served", "templates", templates)
+}
+
+func serveCrazy(w http.ResponseWriter, r *http.Request) {
+	templates := []string{
+		"static/html/crazy.html",
+		"static/html/head.html",
+		"static/html/footer.html",
+	}
+	data, err := getNewPage("crazy")
+	if err != nil {
+		log.Error("failed to get page data",
+			"error", err,
+		)
+		http.Error(w, "failed to get page data", http.StatusInternalServerError)
+		return
+	}
+
+	log.Debug("serving crazy page",
+		"templates", templates,
+		"data", data)
+
+	// w.Header().Set("X-Custom-Header", "special :)")
+	err = writeTemplate(w, templates, data)
+	if err != nil {
+		log.Error("failed to write template",
+			"error", err,
+			"templates", templates,
+			"data", data,
+		)
+		http.Error(w, "failed to write crazy template", http.StatusInternalServerError)
+		return
+	}
+	log.Debug("crazy served", "templates", templates)
 }

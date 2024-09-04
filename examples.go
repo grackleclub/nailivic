@@ -29,38 +29,55 @@ func getNewPage(name string) (page, error) {
 	case "crazy":
 		newPage := page{
 			Head: head{
-				Title:       "My Crazy Page",
-				Stylesheets: []string{"crazy.css"},
+				Title: "My Crazy Page",
+				Stylesheets: []string{
+					"static/css/style.css",
+					"static/css/zero.css",
+				},
 			},
 			Footer: footer{
-				Year: "2020",
+				Year: "1643",
 			},
 		}
 		return newPage, nil
 	case "index":
 		newPage := page{
 			Head: head{
-				Title: "My Page",
+				Title: "Nailivic",
 				Stylesheets: []string{
 					"static/css/style.css",
-					"static/css/zero.css"},
+					"static/css/zero.css",
+				},
 			},
 			Footer: footer{
-				Year: "2018",
+				Year: "2024",
 			},
 		}
-
+		return newPage, nil
+	case "dash":
+		newPage := page{
+			Head: head{
+				Title: "Nailivic Dashboard",
+				Stylesheets: []string{
+					"static/css/style.css",
+					"static/css/zero.css",
+				},
+			},
+			Footer: footer{
+				Year: "2024",
+			},
+		}
 		return newPage, nil
 	default:
 		return page{}, fmt.Errorf("invalid page name: %s", name)
 	}
 }
 
-func doStuffWrapper() {
-	page, err := getNewPage("index")
-	if err != nil {
-		fmt.Println("error getting new page:", err)
-		return
-	}
-	fmt.Println("new page:", page)
-}
+// func doStuffWrapper() {
+// 	page, err := getNewPage("index")
+// 	if err != nil {
+// 		fmt.Println("error getting new page:", err)
+// 		return
+// 	}
+// 	fmt.Println("new page:", page)
+// }

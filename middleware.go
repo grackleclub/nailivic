@@ -22,7 +22,7 @@ func logMW(next http.HandlerFunc) http.HandlerFunc {
 			"opaque", r.URL.Opaque,
 			"bytes", r.ContentLength,
 		)
-		next(w, r)
+		next.ServeHTTP(w, r)
 	}
 }
 
@@ -100,7 +100,7 @@ func authMW(next http.HandlerFunc) http.HandlerFunc {
 			"expiry", key.Exipiry,
 			"token", clientSessionToken,
 		)
-		next(w, r)
+		next.ServeHTTP(w, r)
 
 		// http.Error(w, "invalid session cookie", http.StatusBadRequest)
 	}

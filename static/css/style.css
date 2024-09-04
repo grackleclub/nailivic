@@ -29,7 +29,7 @@
     --clr-primary-300: #1a1b00;
     --clr-primary-400: red;
   
-    --br: .25rem;
+    --br: .15rem;
     --spacer: 1rem;
 }
   
@@ -106,7 +106,6 @@ input {
     border: none;
     border-radius: var(--br);
     cursor: pointer;
-    align-items: center;
 }
 
 .btn:hover {
