@@ -3,7 +3,8 @@
   {{ template "head" . }}
   <body>
     <div>
-      <button hx-get="/static/img/wind-turbine.svg"
+      <button class="btn"
+        hx-get="/static/img/wind-turbine.svg"
         hx-trigger="click"
         hx-target="#svg-1"
         hx-swap="outerHTML">

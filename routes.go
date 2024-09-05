@@ -160,7 +160,6 @@ func serveCrazy(w http.ResponseWriter, r *http.Request) {
 		"data", data,
 	)
 
-	// w.Header().Set("X-Custom-Header", "special :)")
 	err = writeTemplate(w, templates, data)
 	if err != nil {
 		log.Error("failed to write template",
@@ -172,4 +171,27 @@ func serveCrazy(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	log.Debug("crazy served", "templates", templates)
+}
+
+// serveHtmx dynamically serves htmx components based on the path
+func serveHtmx(w http.ResponseWriter, r *http.Request) {
+	// get the component name from the path
+	componentName := r.PathValue("component")
+	log.Info("htmx component requested", "name", componentName)
+
+	// serve the appropriate htmx component based on name from path
+	var err error
+	w.Header().Set("X-htmx-component-name", componentName)
+	switch componentName {
+	case "special":
+		err = writeTemplate(w, []string{"static/html/special.html"}, nil)
+	default:
+		http.Error(w, "missing or invalid htmx component name", http.StatusBadRequest)
+	}
+	if err != nil {
+		log.Error("failed to write htmx component",
+			"error", err,
+			"component", componentName,
+		)
+	}
 }

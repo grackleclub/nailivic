@@ -60,7 +60,7 @@ func main() {
 	// ROUTES
 	// full pages
 	http.HandleFunc("/secret", logMW(authMW(serveSecret)))
-	http.HandleFunc("/crazy", logMW(serveCrazy))
+	http.HandleFunc("/crazy/", logMW(serveCrazy))
 	http.HandleFunc("/", logMW(serveRoot))
 	// http.HandleFunc("/about", logMW(serveAbout)) // TODO (maybe?)
 	// htmx components

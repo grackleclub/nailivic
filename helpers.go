@@ -42,29 +42,6 @@ func token(length int) (string, error) {
 	return base64.URLEncoding.EncodeToString(bytes)[:length], nil
 }
 
-// serveHtmx dynamically serves htmx components based on the path
-func serveHtmx(w http.ResponseWriter, r *http.Request) {
-	// get the component name from the path
-	componentName := r.PathValue("component")
-	log.Info("htmx component requested", "name", componentName)
-
-	// serve the appropriate htmx component based on name from path
-	var err error
-	w.Header().Set("X-htmx-component-name", componentName)
-	switch componentName {
-	case "special":
-		err = writeTemplate(w, []string{"static/html/special.html"}, nil)
-	default:
-		http.Error(w, "missing or invalid htmx component name", http.StatusBadRequest)
-	}
-	if err != nil {
-		log.Error("failed to write htmx component",
-			"error", err,
-			"component", componentName,
-		)
-	}
-}
-
 // writeTemplate executes a set of templates (defined by their path)
 // and injects data from any struct, writing the output to the response writer.
 //
@@ -107,6 +84,10 @@ func writeTemplate(w http.ResponseWriter, templatePaths []string, data interface
 		err = tmpl.Execute(&buf, data)
 		if err != nil {
 			return fmt.Errorf("failed to execute template: %w", err)
+		}
+		if data == nil {
+			log.Warn("skipping template validation because data is nil")
+			return nil
 		}
 		templateContents := buf.String()
 		content, err := parseContent(data)
