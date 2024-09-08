@@ -104,7 +104,7 @@ func serveRoot(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-// serveSecret is an authenticated enpoint example
+// serveSecret is an authenticated endpoint example
 func serveSecret(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusTeapot)
 	w.Write([]byte("I am a teapot"))
@@ -179,12 +179,36 @@ func serveHtmx(w http.ResponseWriter, r *http.Request) {
 	componentName := r.PathValue("component")
 	log.Info("htmx component requested", "name", componentName)
 
+	templates := []string{
+		"static/html/head.html",
+		"static/html/footer.html",
+	}
 	// serve the appropriate htmx component based on name from path
 	var err error
 	w.Header().Set("X-htmx-component-name", componentName)
 	switch componentName {
 	case "special":
-		err = writeTemplate(w, []string{"static/html/special.html"}, nil)
+		pretemp := []string{"static/html/special.html"}
+		pretemp = append(pretemp, templates...)
+
+		data, err := getNewPage(componentName)
+		if err != nil {
+			log.Error("failed to get page data",
+				"error", err,
+				"data", data,
+			)
+			http.Error(w, "failed to get page data", http.StatusInternalServerError)
+			return
+		}
+
+		err = writeTemplate(w, pretemp, data)
+		if err != nil {
+			log.Error("failed to write htmx component",
+				"error", err,
+				"component", componentName,
+			)
+			http.Error(w, "failed to write htmx component", http.StatusInternalServerError)
+		}
 	default:
 		http.Error(w, "missing or invalid htmx component name", http.StatusBadRequest)
 	}

@@ -68,6 +68,20 @@ func getNewPage(name string) (page, error) {
 			},
 		}
 		return newPage, nil
+	case "special":
+		newPage := page{
+			Head: head{
+				Title: "Nailivic",
+				Stylesheets: []string{
+					"/static/css/zero.css",
+					"/static/css/style.css",
+				},
+			},
+			Footer: footer{
+				Year: "2024",
+			},
+		}
+		return newPage, nil
 	default:
 		return page{}, fmt.Errorf("invalid page name: %s", name)
 	}
