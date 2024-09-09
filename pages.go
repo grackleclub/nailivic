@@ -7,7 +7,14 @@ import "fmt"
 type page struct {
 	// Nav    navbar
 	Head   head
+	Parts  []Part
 	Footer footer
+}
+
+type Part struct {
+	Piece string
+	Color string
+	Count int
 }
 
 type head struct {
@@ -26,13 +33,25 @@ func getNewPage(name string) (page, error) {
 	switch name {
 	case "login":
 		return page{}, fmt.Errorf("not implemented")
-	case "crazy":
+	case "parts":
 		newPage := page{
 			Head: head{
-				Title: "Crazy Title",
+				Title: "Parts",
 				Stylesheets: []string{
 					"/static/css/zero.css",
 					"/static/css/style.css",
+				},
+			},
+			Parts: []Part{
+				{
+					Piece: "foo",
+					Color: "bar",
+					Count: 100,
+				},
+				{
+					Piece: "baz",
+					Color: "qux",
+					Count: 200,
 				},
 			},
 			Footer: footer{

@@ -43,18 +43,18 @@ func (i *Item) assemble(a Part, b Part, c Part) {}
 func (i *Item) disassemble()                    {}
 func (i *Item) sku()                            {}
 
-type Part struct {
-	ItemName name
-	Letter   string // (a, b, c)
-	Color    color
-	Size     size
-}
+// type Part struct {
+// 	ItemName name
+// 	Letter   string // (a, b, c)
+// 	Color    color
+// 	Size     size
+// }
 
-func newPart(name name, color color) Part {
-	return Part{
-		ItemName: name,
-		Color:    color,
-	}
-}
+// func newPart(name name, color color) Part {
+// 	return Part{
+// 		ItemName: name,
+// 		Color:    color,
+// 	}
+// }
 
 func (p *Part) create(color string) {}

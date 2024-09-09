@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+{{ template "head" . }}
+<body>
+  <h1>Inventory</h1>
+    <div>
+      <table>
+        <th>
+          {{ range .Parts }}
+            <tr>
+                <td>{{ .Piece }}</td>
+                <td>{{ .Color }}</td>
+                <td>{{ .Count }}</td>
+              </tr>
+              {{ end }}
+            <td></td>
+        </th>
+      </table>
+    </div>
+</body>
+{{ template "footer" . }}
+</html>
