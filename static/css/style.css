@@ -131,15 +131,15 @@ table {
     border: 1px solid var(--clr-neutral-200);
     background-color: var(--clr-neutral-400);
 }
+th {
+    border: 1px solid var(--clr-neutral-200);
+    background-color: var(--clr-neutral-100);
+}
 
 tr {
     border: 1px solid var(--clr-neutral-200);
 }
 
-th {
-    border: 1px solid var(--clr-neutral-200);
-    background-color: var(--clr-neutral-100);
-}
 
 td {
     border: 1px solid var(--clr-neutral-200);
@@ -153,6 +153,8 @@ tr:hover {
     background-color: var(--clr-neutral-100);
 }
 
+/* TODO: center footer content, maybe */
+
 .footer a,
 .footer p {
     padding: 0;
@@ -160,7 +162,6 @@ tr:hover {
     color: var(--clr-neutral-400);
 }
 
-/* .footer a {
-    font-size: var(--fs-100);
-    color: var(--clr-neutral-400);
-} */
+.footer a:hover {
+    color: var(--clr-neutral-300);
+}

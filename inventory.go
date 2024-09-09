@@ -27,10 +27,10 @@ const small size = "small"
 const medium size = "medium"
 const large size = "large"
 
-type Inventory struct {
-	Items []Item
-	Parts []Part
-}
+// type Inventory struct {
+// 	Items []Item
+// 	Parts []Part
+// }
 
 type Item struct {
 	Name name

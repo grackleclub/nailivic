@@ -139,7 +139,7 @@ func serveDash(w http.ResponseWriter, r *http.Request) {
 	log.Debug("root served", "templates", templates)
 }
 
-// serveCrazy is a simple example of a page handler using better structs
+// serveParts is a simple example of a page handler using better structs
 func serveParts(w http.ResponseWriter, r *http.Request) {
 	templates := []string{
 		"static/html/parts.html",
@@ -171,6 +171,39 @@ func serveParts(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	log.Debug("parts served", "templates", templates)
+}
+
+func serveInventory(w http.ResponseWriter, r *http.Request) {
+	templates := []string{
+		"static/html/inventory.html",
+		"static/html/head.html",
+		"static/html/footer.html",
+	}
+	data, err := getNewPage("inventory")
+	if err != nil {
+		log.Error("failed to get page data",
+			"error", err,
+		)
+		http.Error(w, "failed to get page data", http.StatusInternalServerError)
+		return
+	}
+
+	log.Debug("serving inventory page",
+		"templates", templates,
+		"data", data,
+	)
+
+	err = writeTemplate(w, templates, data)
+	if err != nil {
+		log.Error("failed to write template",
+			"error", err,
+			"templates", templates,
+			"data", data,
+		)
+		http.Error(w, "failed to write inventory template", http.StatusInternalServerError)
+		return
+	}
+	log.Debug("inventory served", "templates", templates)
 }
 
 // serveHtmx dynamically serves htmx components based on the path

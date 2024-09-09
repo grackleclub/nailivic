@@ -2,21 +2,23 @@
 <html>
 {{ template "head" . }}
 <body>
-  <h1>Inventory</h1>
-    <div>
-      <table>
-        <th>
-          {{ range .Parts }}
-            <tr>
-                <td>{{ .Piece }}</td>
-                <td>{{ .Color }}</td>
-                <td>{{ .Count }}</td>
-              </tr>
-              {{ end }}
-            <td></td>
-        </th>
-      </table>
-    </div>
+  <h1>Parts</h1>
+  <div>
+    <table>
+      <tr>
+        <th>piece</th>
+        <th>color</th>
+        <th>count</th>
+      </tr>
+      {{ range .Parts }}
+        <tr>
+          <td>{{ .Piece }}</td>
+          <td>{{ .Color }}</td>
+          <td>{{ .Count }}</td>
+        </tr>
+      {{ end }}
+    </table>
+  </div>
 </body>
 {{ template "footer" . }}
 </html>
