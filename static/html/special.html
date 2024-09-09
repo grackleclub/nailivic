@@ -1,8 +1,22 @@
 <!DOCTYPE html>
+<html>
 {{ template "head" . }}
-<div>
-    <p>
-        🌟 Hey now, you're an all-star 🌟
-    </p>
-</div>
-{{ template "footer" . }}
+<body>
+    <h1>Inventory</h1>
+    <div>
+        <table>
+            <th>
+                {{ range .Item }}
+                    <tr>
+                        <td>{{ .Piece }}</td>
+                        <td>{{ .Color }}</td>
+                        <td>{{ .Count }}</td>
+                    </tr>
+                {{ end }}
+                <td></td>
+            </th>
+        </table>
+    </div>
+</body>
+    {{ template "footer" . }}
+</html>
