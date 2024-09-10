@@ -115,6 +115,7 @@ func isValid(username, password string) bool {
 	if username == "user" && password == "pass" {
 		return true
 	}
+
 	return false
 }
 

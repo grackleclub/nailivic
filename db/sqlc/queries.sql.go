@@ -7,8 +7,8 @@ package sqlc
 
 import (
 	"context"
-	"database/sql"
-	"time"
+
+	"github.com/jackc/pgx/v5/pgtype"
 )
 
 const session = `-- name: Session :one
@@ -24,7 +24,7 @@ type SessionRow struct {
 }
 
 func (q *Queries) Session(ctx context.Context, id int32) (SessionRow, error) {
-	row := q.queryRow(ctx, q.sessionStmt, session, id)
+	row := q.db.QueryRow(ctx, session, id)
 	var i SessionRow
 	err := row.Scan(&i.UserID, &i.Token)
 	return i, err
@@ -36,14 +36,14 @@ VALUES ($1, $2, $3, $4)
 `
 
 type SessionAddParams struct {
-	UserID    int32        `json:"user_id"`
-	Token     string       `json:"token"`
-	CreatedOn sql.NullTime `json:"created_on"`
-	ExpiresOn time.Time    `json:"expires_on"`
+	UserID    int32            `json:"user_id"`
+	Token     string           `json:"token"`
+	CreatedOn pgtype.Timestamp `json:"created_on"`
+	ExpiresOn pgtype.Timestamp `json:"expires_on"`
 }
 
 func (q *Queries) SessionAdd(ctx context.Context, arg SessionAddParams) error {
-	_, err := q.exec(ctx, q.sessionAddStmt, sessionAdd,
+	_, err := q.db.Exec(ctx, sessionAdd,
 		arg.UserID,
 		arg.Token,
 		arg.CreatedOn,
@@ -58,14 +58,14 @@ VALUES ($1, $2, $3, $4)
 `
 
 type UserAddParams struct {
-	Username       string       `json:"username"`
-	HashedPassword string       `json:"hashed_password"`
-	CreatedOn      sql.NullTime `json:"created_on"`
-	LastLogin      sql.NullTime `json:"last_login"`
+	Username       string           `json:"username"`
+	HashedPassword string           `json:"hashed_password"`
+	CreatedOn      pgtype.Timestamp `json:"created_on"`
+	LastLogin      pgtype.Timestamp `json:"last_login"`
 }
 
 func (q *Queries) UserAdd(ctx context.Context, arg UserAddParams) error {
-	_, err := q.exec(ctx, q.userAddStmt, userAdd,
+	_, err := q.db.Exec(ctx, userAdd,
 		arg.Username,
 		arg.HashedPassword,
 		arg.CreatedOn,
@@ -79,7 +79,7 @@ SELECT id, username, hashed_password, created_on, last_login FROM users WHERE id
 `
 
 func (q *Queries) UserByID(ctx context.Context, id int32) (User, error) {
-	row := q.queryRow(ctx, q.userByIDStmt, userByID, id)
+	row := q.db.QueryRow(ctx, userByID, id)
 	var i User
 	err := row.Scan(
 		&i.ID,
@@ -96,7 +96,7 @@ SELECT id, username, hashed_password, created_on, last_login FROM users WHERE us
 `
 
 func (q *Queries) UserByUsername(ctx context.Context, username string) (User, error) {
-	row := q.queryRow(ctx, q.userByUsernameStmt, userByUsername, username)
+	row := q.db.QueryRow(ctx, userByUsername, username)
 	var i User
 	err := row.Scan(
 		&i.ID,

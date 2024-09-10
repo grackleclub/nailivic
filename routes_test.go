@@ -40,7 +40,8 @@ func TestServeRoutes(t *testing.T) {
 
 			body := rr.Body.String()
 			assert.NotEqual(t, 0, len(body))
-			t.Logf("passed %s: %d\n%v", test.name, test.statusCode, body)
+			t.Logf("passed %s: %d\n", test.name, test.statusCode)
+			// t.Logf("%s\n", body)
 		})
 	}
 }

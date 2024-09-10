@@ -5,22 +5,21 @@
 package sqlc
 
 import (
-	"database/sql"
-	"time"
+	"github.com/jackc/pgx/v5/pgtype"
 )
 
 type Session struct {
-	ID        int32        `json:"id"`
-	UserID    int32        `json:"user_id"`
-	Token     string       `json:"token"`
-	CreatedOn sql.NullTime `json:"created_on"`
-	ExpiresOn time.Time    `json:"expires_on"`
+	ID        int32            `json:"id"`
+	UserID    int32            `json:"user_id"`
+	Token     string           `json:"token"`
+	CreatedOn pgtype.Timestamp `json:"created_on"`
+	ExpiresOn pgtype.Timestamp `json:"expires_on"`
 }
 
 type User struct {
-	ID             int32        `json:"id"`
-	Username       string       `json:"username"`
-	HashedPassword string       `json:"hashed_password"`
-	CreatedOn      sql.NullTime `json:"created_on"`
-	LastLogin      sql.NullTime `json:"last_login"`
+	ID             int32            `json:"id"`
+	Username       string           `json:"username"`
+	HashedPassword string           `json:"hashed_password"`
+	CreatedOn      pgtype.Timestamp `json:"created_on"`
+	LastLogin      pgtype.Timestamp `json:"last_login"`
 }

@@ -6,6 +6,8 @@ require (
 	github.com/ddbgio/cookie/v2 v2.0.2
 	github.com/ddbgio/log v1.0.0
 	github.com/ddbgio/postgres v0.0.0-20240910012659-16e68ba46f05
+	github.com/jackc/pgx v3.6.2+incompatible
+	github.com/jackc/pgx/v5 v5.7.0
 	github.com/stretchr/testify v1.9.0
 )
 
@@ -31,7 +33,6 @@ require (
 	github.com/google/uuid v1.6.0 // indirect
 	github.com/jackc/pgpassfile v1.0.0 // indirect
 	github.com/jackc/pgservicefile v0.0.0-20240606120523-5a60cdf6a761 // indirect
-	github.com/jackc/pgx/v5 v5.7.0 // indirect
 	github.com/jackc/puddle/v2 v2.2.1 // indirect
 	github.com/klauspost/compress v1.17.4 // indirect
 	github.com/lib/pq v1.10.9 // indirect

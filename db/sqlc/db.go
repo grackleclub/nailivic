@@ -6,123 +6,27 @@ package sqlc
 
 import (
 	"context"
-	"database/sql"
-	"fmt"
+
+	"github.com/jackc/pgx/v5"
+	"github.com/jackc/pgx/v5/pgconn"
 )
 
 type DBTX interface {
-	ExecContext(context.Context, string, ...interface{}) (sql.Result, error)
-	PrepareContext(context.Context, string) (*sql.Stmt, error)
-	QueryContext(context.Context, string, ...interface{}) (*sql.Rows, error)
-	QueryRowContext(context.Context, string, ...interface{}) *sql.Row
+	Exec(context.Context, string, ...interface{}) (pgconn.CommandTag, error)
+	Query(context.Context, string, ...interface{}) (pgx.Rows, error)
+	QueryRow(context.Context, string, ...interface{}) pgx.Row
 }
 
 func New(db DBTX) *Queries {
 	return &Queries{db: db}
 }
 
-func Prepare(ctx context.Context, db DBTX) (*Queries, error) {
-	q := Queries{db: db}
-	var err error
-	if q.sessionStmt, err = db.PrepareContext(ctx, session); err != nil {
-		return nil, fmt.Errorf("error preparing query Session: %w", err)
-	}
-	if q.sessionAddStmt, err = db.PrepareContext(ctx, sessionAdd); err != nil {
-		return nil, fmt.Errorf("error preparing query SessionAdd: %w", err)
-	}
-	if q.userAddStmt, err = db.PrepareContext(ctx, userAdd); err != nil {
-		return nil, fmt.Errorf("error preparing query UserAdd: %w", err)
-	}
-	if q.userByIDStmt, err = db.PrepareContext(ctx, userByID); err != nil {
-		return nil, fmt.Errorf("error preparing query UserByID: %w", err)
-	}
-	if q.userByUsernameStmt, err = db.PrepareContext(ctx, userByUsername); err != nil {
-		return nil, fmt.Errorf("error preparing query UserByUsername: %w", err)
-	}
-	return &q, nil
-}
-
-func (q *Queries) Close() error {
-	var err error
-	if q.sessionStmt != nil {
-		if cerr := q.sessionStmt.Close(); cerr != nil {
-			err = fmt.Errorf("error closing sessionStmt: %w", cerr)
-		}
-	}
-	if q.sessionAddStmt != nil {
-		if cerr := q.sessionAddStmt.Close(); cerr != nil {
-			err = fmt.Errorf("error closing sessionAddStmt: %w", cerr)
-		}
-	}
-	if q.userAddStmt != nil {
-		if cerr := q.userAddStmt.Close(); cerr != nil {
-			err = fmt.Errorf("error closing userAddStmt: %w", cerr)
-		}
-	}
-	if q.userByIDStmt != nil {
-		if cerr := q.userByIDStmt.Close(); cerr != nil {
-			err = fmt.Errorf("error closing userByIDStmt: %w", cerr)
-		}
-	}
-	if q.userByUsernameStmt != nil {
-		if cerr := q.userByUsernameStmt.Close(); cerr != nil {
-			err = fmt.Errorf("error closing userByUsernameStmt: %w", cerr)
-		}
-	}
-	return err
-}
-
-func (q *Queries) exec(ctx context.Context, stmt *sql.Stmt, query string, args ...interface{}) (sql.Result, error) {
-	switch {
-	case stmt != nil && q.tx != nil:
-		return q.tx.StmtContext(ctx, stmt).ExecContext(ctx, args...)
-	case stmt != nil:
-		return stmt.ExecContext(ctx, args...)
-	default:
-		return q.db.ExecContext(ctx, query, args...)
-	}
-}
-
-func (q *Queries) query(ctx context.Context, stmt *sql.Stmt, query string, args ...interface{}) (*sql.Rows, error) {
-	switch {
-	case stmt != nil && q.tx != nil:
-		return q.tx.StmtContext(ctx, stmt).QueryContext(ctx, args...)
-	case stmt != nil:
-		return stmt.QueryContext(ctx, args...)
-	default:
-		return q.db.QueryContext(ctx, query, args...)
-	}
-}
-
-func (q *Queries) queryRow(ctx context.Context, stmt *sql.Stmt, query string, args ...interface{}) *sql.Row {
-	switch {
-	case stmt != nil && q.tx != nil:
-		return q.tx.StmtContext(ctx, stmt).QueryRowContext(ctx, args...)
-	case stmt != nil:
-		return stmt.QueryRowContext(ctx, args...)
-	default:
-		return q.db.QueryRowContext(ctx, query, args...)
-	}
-}
-
 type Queries struct {
-	db                 DBTX
-	tx                 *sql.Tx
-	sessionStmt        *sql.Stmt
-	sessionAddStmt     *sql.Stmt
-	userAddStmt        *sql.Stmt
-	userByIDStmt       *sql.Stmt
-	userByUsernameStmt *sql.Stmt
+	db DBTX
 }
 
-func (q *Queries) WithTx(tx *sql.Tx) *Queries {
+func (q *Queries) WithTx(tx pgx.Tx) *Queries {
 	return &Queries{
-		db:                 tx,
-		tx:                 tx,
-		sessionStmt:        q.sessionStmt,
-		sessionAddStmt:     q.sessionAddStmt,
-		userAddStmt:        q.userAddStmt,
-		userByIDStmt:       q.userByIDStmt,
-		userByUsernameStmt: q.userByUsernameStmt,
+		db: tx,
 	}
 }
