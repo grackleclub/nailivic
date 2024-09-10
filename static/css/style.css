@@ -57,6 +57,16 @@ body {
     background-color: var(--clr-primary-300);
 }
 
+.menu_btn {
+    display: block;
+    padding: var(--spacer);
+    color: var(--clr-neutral-100);
+    background-color: var(--clr-primary-300);
+    border: none;
+    border-radius: var(--br);
+    cursor: pointer;
+}
+
 a {
     text-decoration: none;
     line-height: 2;

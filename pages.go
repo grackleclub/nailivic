@@ -118,7 +118,7 @@ func getNewPage(name string) (page, error) {
 				},
 			},
 			Footer: footer{
-				Year: "9876",
+				Year: "2024",
 			},
 		}
 		return newPage, nil

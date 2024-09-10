@@ -2,40 +2,22 @@
 <html lang="en">
   {{ template "head" . }}
   <body>
-    <div>
-      <button class="btn"
-        hx-get="/static/img/wind-turbine.svg"
+    <div id="root_div">
+        <h2 hx-get="htmx/parts"
+        hx-swap="outerHTML"
         hx-trigger="click"
-        hx-target="#svg-1"
-        hx-swap="outerHTML">
-          click here!
-      </button>
-      <img id="svg-1" src="/static/img/heart.svg"/>
+        hx-target="#root_div"
+        >
+        Parts
+      </h2>
+      <h2 hx-get="htmx/inventory"
+        hx-swap="outerHTML"
+        hx-trigger="click"
+        hx-target="#root_div"
+        >
+        Inventory
+      </h2>
+      {{ template "footer" . }}
     </div>
-    <div>
-      <table>
-        <tr>
-          <th>piece</th>
-          <th>color</th>
-          <th>count</th>
-        </tr>
-        <tr>
-          <td>tail</td>
-          <td>red</td>
-          <td>10</td>
-        </tr>
-        <tr>
-          <td>hair</td>
-          <td>blue</td>
-          <td>20</td>
-        </tr>
-        <tr>
-          <td>eye</td>
-          <td>green</td>
-          <td>30</td>
-        </tr>
-      </table>
-    </div>
-    {{ template "footer" . }}
   </body>
 </html>
