@@ -60,10 +60,9 @@ func main() {
 	// ROUTES
 	// full pages
 	http.HandleFunc("/secret", logMW(authMW(serveSecret)))
-	http.HandleFunc("/parts/", logMW(serveParts))
-	http.HandleFunc("/inventory/", logMW(serveInventory))
+	http.HandleFunc("/parts", logMW(serveParts))
+	http.HandleFunc("/inventory", logMW(serveInventory))
 	http.HandleFunc("/", logMW(serveRoot))
-	// http.HandleFunc("/about", logMW(serveAbout)) // TODO (maybe?)
 	// htmx components
 	http.HandleFunc("/htmx/{component}", logMW(serveHtmx))
 	// static files
@@ -71,7 +70,6 @@ func main() {
 		http.FileServer(http.FS(content)),
 	)
 	http.HandleFunc("/favicon.ico", func(w http.ResponseWriter, r *http.Request) {
-		// this doesn't work
 		log.Debug("favicon requested")
 		http.ServeFile(w, r, "static/img/favicon.ico")
 	})

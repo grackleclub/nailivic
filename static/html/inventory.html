@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 {{ template "head" . }}
-<body>
+<body id="inventory_bod">
   <h1>Inventory</h1>
   <div>
     <table>
@@ -14,17 +14,24 @@
         <th>count</th>
       </tr>
       {{ range .Inventory }}
-        <tr>
-          <td>{{ .Item }}</td>
-          <td>{{ .Color_A }}</td>
-          <td>{{ .Color_B }}</td>
-          <td>{{ .Color_C }}</td>
-          <td>{{ .Size }}</td>
-          <td>{{ .Count }}</td>
-        </tr>
+      <tr>
+        <td>{{ .Item }}</td>
+        <td>{{ .Color_A }}</td>
+        <td>{{ .Color_B }}</td>
+        <td>{{ .Color_C }}</td>
+        <td>{{ .Size }}</td>
+        <td>{{ .Count }}</td>
+      </tr>
       {{ end }}
     </table>
   </div>
+  <button class="btn"
+    hx-get="/parts"
+    hx-target="#inventory_bod" 
+    hx-swap="outerHTML"
+  >
+    Parts
+  </button>
 </body>
 {{ template "footer" . }}
 </html>

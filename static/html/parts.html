@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 {{ template "head" . }}
-<body>
+<body id="parts_bod">
   <h1>Parts</h1>
   <div>
     <table>
@@ -19,6 +19,13 @@
       {{ end }}
     </table>
   </div>
+  <button class="btn"
+    hx-get="/inventory" 
+    hx-target="#parts_bod"
+    hx-swap="outerHTML"
+  >
+    Inventory
+  </button>
 </body>
 {{ template "footer" . }}
 </html>
