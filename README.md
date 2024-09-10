@@ -4,6 +4,10 @@ Go + htmx rewrite of [nailivic](https://github.com/Turkosaurus/nailivic)
 ## frontend
 `htmx` drives the frontend, utilizing HTML as the engine of application state.
 
+### routes
+- `/` serves root which will be the only full page load. Root  directs to login when not logged in.
+- `htmx/{component}` serves Parts, Inventory, Admin, etc.
+
 ### Air
 Live reload for Go apps, to see your changes in realtime without having to restart your server
 

@@ -220,8 +220,8 @@ func serveHtmx(w http.ResponseWriter, r *http.Request) {
 	var err error
 	w.Header().Set("X-htmx-component-name", componentName)
 	switch componentName {
-	case "special":
-		pretemp := []string{"static/html/special.html"}
+	case "parts":
+		pretemp := []string{"static/html/parts.html"}
 		pretemp = append(pretemp, templates...)
 
 		data, err := getNewPage(componentName)
