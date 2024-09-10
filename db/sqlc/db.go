@@ -30,11 +30,14 @@ func Prepare(ctx context.Context, db DBTX) (*Queries, error) {
 	if q.sessionAddStmt, err = db.PrepareContext(ctx, sessionAdd); err != nil {
 		return nil, fmt.Errorf("error preparing query SessionAdd: %w", err)
 	}
-	if q.userStmt, err = db.PrepareContext(ctx, user); err != nil {
-		return nil, fmt.Errorf("error preparing query User: %w", err)
-	}
 	if q.userAddStmt, err = db.PrepareContext(ctx, userAdd); err != nil {
 		return nil, fmt.Errorf("error preparing query UserAdd: %w", err)
+	}
+	if q.userByIDStmt, err = db.PrepareContext(ctx, userByID); err != nil {
+		return nil, fmt.Errorf("error preparing query UserByID: %w", err)
+	}
+	if q.userByUsernameStmt, err = db.PrepareContext(ctx, userByUsername); err != nil {
+		return nil, fmt.Errorf("error preparing query UserByUsername: %w", err)
 	}
 	return &q, nil
 }
@@ -51,14 +54,19 @@ func (q *Queries) Close() error {
 			err = fmt.Errorf("error closing sessionAddStmt: %w", cerr)
 		}
 	}
-	if q.userStmt != nil {
-		if cerr := q.userStmt.Close(); cerr != nil {
-			err = fmt.Errorf("error closing userStmt: %w", cerr)
-		}
-	}
 	if q.userAddStmt != nil {
 		if cerr := q.userAddStmt.Close(); cerr != nil {
 			err = fmt.Errorf("error closing userAddStmt: %w", cerr)
+		}
+	}
+	if q.userByIDStmt != nil {
+		if cerr := q.userByIDStmt.Close(); cerr != nil {
+			err = fmt.Errorf("error closing userByIDStmt: %w", cerr)
+		}
+	}
+	if q.userByUsernameStmt != nil {
+		if cerr := q.userByUsernameStmt.Close(); cerr != nil {
+			err = fmt.Errorf("error closing userByUsernameStmt: %w", cerr)
 		}
 	}
 	return err
@@ -98,21 +106,23 @@ func (q *Queries) queryRow(ctx context.Context, stmt *sql.Stmt, query string, ar
 }
 
 type Queries struct {
-	db             DBTX
-	tx             *sql.Tx
-	sessionStmt    *sql.Stmt
-	sessionAddStmt *sql.Stmt
-	userStmt       *sql.Stmt
-	userAddStmt    *sql.Stmt
+	db                 DBTX
+	tx                 *sql.Tx
+	sessionStmt        *sql.Stmt
+	sessionAddStmt     *sql.Stmt
+	userAddStmt        *sql.Stmt
+	userByIDStmt       *sql.Stmt
+	userByUsernameStmt *sql.Stmt
 }
 
 func (q *Queries) WithTx(tx *sql.Tx) *Queries {
 	return &Queries{
-		db:             tx,
-		tx:             tx,
-		sessionStmt:    q.sessionStmt,
-		sessionAddStmt: q.sessionAddStmt,
-		userStmt:       q.userStmt,
-		userAddStmt:    q.userAddStmt,
+		db:                 tx,
+		tx:                 tx,
+		sessionStmt:        q.sessionStmt,
+		sessionAddStmt:     q.sessionAddStmt,
+		userAddStmt:        q.userAddStmt,
+		userByIDStmt:       q.userByIDStmt,
+		userByUsernameStmt: q.userByUsernameStmt,
 	}
 }

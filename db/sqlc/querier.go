@@ -11,8 +11,9 @@ import (
 type Querier interface {
 	Session(ctx context.Context, id int32) (SessionRow, error)
 	SessionAdd(ctx context.Context, arg SessionAddParams) error
-	User(ctx context.Context, id int32) (User, error)
 	UserAdd(ctx context.Context, arg UserAddParams) error
+	UserByID(ctx context.Context, id int32) (User, error)
+	UserByUsername(ctx context.Context, username string) (User, error)
 }
 
 var _ Querier = (*Queries)(nil)

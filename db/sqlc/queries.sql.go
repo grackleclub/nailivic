@@ -52,23 +52,6 @@ func (q *Queries) SessionAdd(ctx context.Context, arg SessionAddParams) error {
 	return err
 }
 
-const user = `-- name: User :one
-SELECT id, username, hashed_password, created_on, last_login FROM users WHERE id = $1
-`
-
-func (q *Queries) User(ctx context.Context, id int32) (User, error) {
-	row := q.queryRow(ctx, q.userStmt, user, id)
-	var i User
-	err := row.Scan(
-		&i.ID,
-		&i.Username,
-		&i.HashedPassword,
-		&i.CreatedOn,
-		&i.LastLogin,
-	)
-	return i, err
-}
-
 const userAdd = `-- name: UserAdd :exec
 INSERT INTO users (username, hashed_password, created_on, last_login)
 VALUES ($1, $2, $3, $4)
@@ -89,4 +72,38 @@ func (q *Queries) UserAdd(ctx context.Context, arg UserAddParams) error {
 		arg.LastLogin,
 	)
 	return err
+}
+
+const userByID = `-- name: UserByID :one
+SELECT id, username, hashed_password, created_on, last_login FROM users WHERE id = $1
+`
+
+func (q *Queries) UserByID(ctx context.Context, id int32) (User, error) {
+	row := q.queryRow(ctx, q.userByIDStmt, userByID, id)
+	var i User
+	err := row.Scan(
+		&i.ID,
+		&i.Username,
+		&i.HashedPassword,
+		&i.CreatedOn,
+		&i.LastLogin,
+	)
+	return i, err
+}
+
+const userByUsername = `-- name: UserByUsername :one
+SELECT id, username, hashed_password, created_on, last_login FROM users WHERE username = $1
+`
+
+func (q *Queries) UserByUsername(ctx context.Context, username string) (User, error) {
+	row := q.queryRow(ctx, q.userByUsernameStmt, userByUsername, username)
+	var i User
+	err := row.Scan(
+		&i.ID,
+		&i.Username,
+		&i.HashedPassword,
+		&i.CreatedOn,
+		&i.LastLogin,
+	)
+	return i, err
 }

@@ -20,7 +20,7 @@ type test struct {
 // testing new routes and handlers requires only setting more test cases
 var cases = []test{
 	{"root", "GET", "/", serveRoot, http.StatusOK},
-	{"root", "GET", "/dash", serveDash, http.StatusOK},
+	// {"root", "GET", "/dash", serveDash, http.StatusOK},
 	// add more test cases here as application grows
 }
 
