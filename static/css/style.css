@@ -26,10 +26,10 @@
     --clr-neutral-500: ;
     --clr-neutral-900: ;
   
-    --clr-primary-300: #2B2A33;
+    --clr-primary-300: #1a1b00;
     --clr-primary-400: red;
   
-    --br: 1rem;
+    --br: .15rem;
     --spacer: 1rem;
 }
   
@@ -51,14 +51,8 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding: var(--spacer);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: var(--spacer);
+    line-height: 1.5;
     font-family: var(--ff-sans);
-    font-size: var(--fs-200);
-    line-height: 2;
     color: var(--clr-neutral-100);
     background-color: var(--clr-primary-300);
 }
@@ -70,8 +64,7 @@ a {
     background-color: var(--clr-primary-300);
 }
 
-a {
-    text-decoration: none;
+a:hover {
     color: var(--clr-neutral-100);
 }
 
@@ -88,27 +81,65 @@ div {
     padding: var(--spacer);
 }
 
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p {
+    padding: var(--spacer);
+}
+
 svg, img {
     height: 10rem;
     width: 10rem;
 }
 
+form {
+    line-height: 2;
+}
+
+input {
+    background: var(--clr-neutral-100);
+    border: none;
+    border-radius: var(--br);
+}
+
+.btn {
+    padding: .3rem;
+    margin-top: var(--spacer);
+    font-size: var(--fs-100);
+    color: var(--clr-neutral-100);
+    background-color: var(--clr-neutral-400);
+    border: none;
+    border-radius: var(--br);
+    cursor: pointer;
+}
+
+.btn:hover {
+    background-color: var(--clr-neutral-100);
+    color: var(--clr-primary-300);
+}
+
 table {
     width: 75vw;
+    padding: var(--spacer);
+    font-size: var(--fs-200);
     color: var(--clr-neutral-200);
     border-collapse: collapse;
     border: 1px solid var(--clr-neutral-200);
     background-color: var(--clr-neutral-400);
+}
+th {
+    border: 1px solid var(--clr-neutral-200);
+    background-color: var(--clr-neutral-100);
 }
 
 tr {
     border: 1px solid var(--clr-neutral-200);
 }
 
-th {
-    border: 1px solid var(--clr-neutral-200);
-    background-color: var(--clr-neutral-100);
-}
 
 td {
     border: 1px solid var(--clr-neutral-200);
@@ -120,4 +151,17 @@ tr:nth-child(even) {
 
 tr:hover {
     background-color: var(--clr-neutral-100);
+}
+
+/* TODO: center footer content, maybe */
+
+.footer a,
+.footer p {
+    padding: 0;
+    font-size: var(--fs-100);
+    color: var(--clr-neutral-400);
+}
+
+.footer a:hover {
+    color: var(--clr-neutral-300);
 }

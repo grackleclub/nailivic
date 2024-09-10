@@ -1,11 +1,7 @@
 package main
 
 import (
-	"crypto/rand"
-	"encoding/base64"
-	"fmt"
 	"net/http"
-	"time"
 
 	cookie "github.com/ddbgio/cookie/v2"
 )
@@ -26,36 +22,10 @@ func logMW(next http.HandlerFunc) http.HandlerFunc {
 	}
 }
 
-const cookieName string = "nailivic-session"
-
-// var secretsBackend []sessionKey
-
-var backend = make(map[int]sessionKey)
-
-const sessionDefaultExpiry = 1 * time.Hour
-
-type sessionKey struct {
-	Username      string
-	SessionSecret string
-	Exipiry       time.Time
-}
-
-func (s sessionKey) isExpired() bool {
-	return s.Exipiry.Before(time.Now())
-}
-
-func newSecret(length int) (string, error) {
-	bytes := make([]byte, length)
-	if _, err := rand.Read(bytes); err != nil {
-		return "", fmt.Errorf("failed to generate random bytes: %w", err)
-	}
-	return base64.URLEncoding.EncodeToString(bytes)[:length], nil
-}
-
 // authMW is a middleware that checks cookie for authentication
 func authMW(next http.HandlerFunc) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		userID, clientSessionToken, err := cookie.ReadEncrypted(r, cookieName, cookieSecret)
+		userID, clientSessionToken, err := cookie.ReadEncrypted(r, cookieName, cookieGlobalSecret)
 		if err != nil {
 			log.InfoContext(r.Context(), "cookie validation failed",
 				"error", err,

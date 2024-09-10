@@ -1,18 +1,16 @@
 {{ define "head" }}
-<!DOCTYPE html>
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>{{ .Title}}</title>
+  <title>{{ .Head.Title }}</title>
   <script src="https://unpkg.com/htmx.org@2.0.2"></script>
-  <!-- <link rel="icon" href="/static/img/cat-space-duotone.svg"> -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link
       href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Inline+Display:wght@100..900&display=swap|family=Big+Shoulders+Text:wght@100..900&display=swap|family=Lora:ital,wght@0,400;0,700;1,400;1,700&display=swap"
       rel="stylesheet"/>
-  {{ range .Stylesheets }}
-      <link rel="stylesheet" href="{{ . }}"/>
+  {{ range .Head.Stylesheets }}
+    <link rel="stylesheet" href="{{ . }}"/>
   {{ end }}
-    </head>
+</head>
 {{ end }}

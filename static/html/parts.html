@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+{{ template "head" . }}
+<body id="parts_bod">
+  <h1>Parts</h1>
+  <div>
+    <table>
+      <tr>
+        <th>piece</th>
+        <th>color</th>
+        <th>count</th>
+      </tr>
+      {{ range .Parts }}
+        <tr>
+          <td>{{ .Piece }}</td>
+          <td>{{ .Color }}</td>
+          <td>{{ .Count }}</td>
+        </tr>
+      {{ end }}
+    </table>
+  </div>
+  <button class="btn"
+    hx-get="/inventory" 
+    hx-target="#parts_bod"
+    hx-swap="outerHTML"
+  >
+    Inventory
+  </button>
+</body>
+{{ template "footer" . }}
+</html>
