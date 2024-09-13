@@ -7,6 +7,7 @@ import (
 	"net/http"
 
 	cookie "github.com/ddbgio/cookie/v2"
+	"github.com/ddbgio/healthz"
 	logger "github.com/ddbgio/log"
 )
 
@@ -63,6 +64,7 @@ func main() {
 	http.HandleFunc("/parts", logMW(serveParts))
 	http.HandleFunc("/inventory", logMW(serveInventory))
 	http.HandleFunc("/", logMW(serveRoot))
+	http.HandleFunc("/healthz", logMW(healthz.Respond))
 	// htmx components
 	http.HandleFunc("/htmx/{component}", logMW(serveHtmx))
 	// static files

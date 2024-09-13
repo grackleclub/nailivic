@@ -23,6 +23,8 @@ github.com/davecgh/go-spew v1.1.1 h1:vj9j/u1bqnvCEfJOwUhtlOARqs3+rkHYY13jYWTU97c
 github.com/davecgh/go-spew v1.1.1/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
 github.com/ddbgio/cookie/v2 v2.0.2 h1:gYONEcNl2tapznKEsWrKHtXvJS5UdITVqc2JXiIcHr0=
 github.com/ddbgio/cookie/v2 v2.0.2/go.mod h1:G/lhDWX2s4Is6DLaLD4Ky1EGqTnyGuWlXIjPUFUVKbY=
+github.com/ddbgio/healthz v0.0.0-20240912010619-0bedf662f51b h1:MBr9q79t8vZeOMPngglq7FKRmhVmWMVz82Tz7+VJNxM=
+github.com/ddbgio/healthz v0.0.0-20240912010619-0bedf662f51b/go.mod h1:jY86vqWAsc0FiueezgGdKVBE+pSg1exQf3SloDquWag=
 github.com/ddbgio/log v1.0.0 h1:bXdzEj+zUBjWmKHpIp/fNt+OsAMfoogXw2Hnqhc3PFc=
 github.com/ddbgio/log v1.0.0/go.mod h1:SoFhDizg6DyI+4t6sQhkHOa2GmL52yqg0sEVc7G+5Wk=
 github.com/ddbgio/postgres v0.0.0-20240910012659-16e68ba46f05 h1:Z2sIJaozekYGZ+fD+3NCCNBh23q7k2crTZ/70tVNOcc=
