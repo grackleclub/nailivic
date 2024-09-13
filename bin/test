@@ -1,8 +1,14 @@
 #!/usr/bin/env bash
 
-echo "🧪 Running integration tests"
+set -euo pipefail
+
+echo "🧪 Setting up development database ..."
 
 PASSWORD="mysecretpassword"
+
+# set go path
+export PATH=$PATH:/usr/local/go/bin
+export DEBUG=true
 
 # require root
 if [ "$(id -u)" != "0" ]; then
@@ -15,17 +21,28 @@ sleep 2
 trap "sudo docker compose down" EXIT
 
 # check a simple connecton with psql
+echo "🔍 Checking Postgres container ..."
 if ! psql \
   "postgresql://postgres:$PASSWORD@localhost:5432/postgres" \
-  -c "SELECT 'Connected OK using psql';"; then
+  -c "SELECT 'Connected OK using psql' AS status;"; then
     echo "❌ psql failed"
     exit 1
 fi
+echo "🟢 Test Postgres container is up!"
 
-# run go tests
-if ! /usr/local/go/bin/go test -v ./... -tags=integration; then
-    echo "❌ Tests failed"
-    exit 1
+if [ $# -eq 0 ]; then
+  # Keep the container open for 5 minutes and print logs
+  echo "No command provided."
+  echo "Keeping open and printing container logs ..."
+  sudo docker logs -f postgres
+  exit 0
 fi
 
+echo "▶️  Running commmand ..."
+printf "%s@%s:-# %s\n" "$(whoami)" "$(hostname)" "$*"
 
+# run the commands passed in
+if ! "$@"; then
+  echo "❌ failed"
+  exit 1
+fi

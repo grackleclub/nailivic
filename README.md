@@ -19,6 +19,24 @@ alias air='~/usr/go/bin/air'
 
 Github for [air](https://github.com/air-verse/air).
 
+### running for development
+The `test` script boots a postgres instance for testing. Run tests with:
+```
+    sudo bin/test go run .
+```
+
+Or run with no arguments to keep open, printing postgres logs:
+```
+    sudo bin/test
+```
+
+Then, open a new window to start the application.
+```
+    go run .
+```
+
+Air might work, but isn't tested.
+
 ## templates
 Templates are handled by go's standard `template/html` package. 
 
