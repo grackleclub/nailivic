@@ -19,6 +19,16 @@
       {{ end }}
     </table>
   </div>
+  <button class="btn" 
+    hx-on:click="alert('back button clicked')"
+    TODO: add hx-get to go back to home page
+    TODO: I know the button works but is not doing anything
+    TODO: I think it might be something in routes.go
+    hx-swap="outerHTML" 
+    hx-target="#parts_bod"
+    >
+    Back
+  </button>
 </body>
 {{ template "footer" . }}
 </html>
